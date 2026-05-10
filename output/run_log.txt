@@ -1,0 +1,197 @@
+
+██████████████████████████████████████████████████████████████████████
+  POLYMARKET ANALYSIS 1: What Are Prediction Markets Actually Predicting?
+██████████████████████████████████████████████████████████████████████
+  Started: 2026-05-10T06:02:26.191755+00:00
+  Output directory: /workspace/output
+  Data directory: /workspace/data
+
+======================================================================
+STEP 1: Fetching resolved markets from Polymarket Gamma API
+======================================================================
+  Fetching page 1 (offset=0, limit=100)...
+  Got 100 markets (total so far: 100)
+  Fetching page 2 (offset=100, limit=100)...
+  Got 100 markets (total so far: 200)
+
+  Total raw markets fetched: 200
+
+======================================================================
+STEP 2: Schema validation & data cleaning
+======================================================================
+  Markets after cleaning: 200/200
+  Dropped reasons: {}
+  Markets with missing fields: 13
+  Type issues found: 0
+  Saved validation report → /workspace/output/schema_validation_report.json
+
+======================================================================
+STEP 3: Building structured DataFrame
+======================================================================
+  DataFrame shape: (200, 19)
+  Columns: ['market_id', 'condition_id', 'question', 'slug', 'start_date', 'end_date', 'volume', 'liquidity', 'category_raw', 'broad_category', 'outcomes', 'final_yes_price', 'resolved_yes', 'outcome_binary', 'resolution', 'num_outcomes', 'clob_token_ids', 'duration_hours', 'duration_days']
+  Binary outcomes available: 50/200
+  Saved cleaned markets → /workspace/data/markets_cleaned.csv
+
+======================================================================
+STEP 4: Category distribution & summary statistics
+======================================================================
+
+  Category distribution:
+    sports              :   64 (32.0%)
+    other               :   60 (30.0%)
+    politics            :   50 (25.0%)
+    crypto              :   11 (5.5%)
+    tech/ai             :    8 (4.0%)
+    economics           :    7 (3.5%)
+
+  Saved summary statistics → /workspace/output/market_summary_statistics.json
+  Saved category chart → /workspace/output/category_distribution.png
+
+======================================================================
+STEP 5: Fetching price histories for 20 sample markets
+======================================================================
+  Markets with valid YES token IDs and volume > $1000: 144
+  Sampling 18 markets for price history...
+  [1/18] Fetching: Will the price of $ETH be higher or lower 1 week post-merge?...
+    ✗ No history returned
+  [2/18] Fetching: Will $ETH hit $2000 again before the merge?...
+    ✗ No history returned
+  [3/18] Fetching: Will $ETH hit $1,500 or $2,500 first?...
+    ✗ No history returned
+  [4/18] Fetching: Will Sam Trabucco be federally charged by March 31?...
+    ✓ Got 281 price points
+  [5/18] Fetching: Will the Fed increase interest rates by 50 bps after its Feb...
+    ✓ Got 248 price points
+  [6/18] Fetching: Will the Fed increase interest rates by 25 bps after its Feb...
+    ✓ Got 247 price points
+  [7/18] Fetching: Will a nuclear weapon detonate by June 30?...
+    ✓ Got 282 price points
+  [8/18] Fetching: Will NATO expand in 2022?...
+    ✗ No history returned
+  [9/18] Fetching: Super Bowl LVII: Eagles vs. Chiefs...
+    ✓ Got 180 price points
+  [10/18] Fetching: Which party wins 2024 US Presidential Election?...
+    ✓ Got 1325 price points
+  [11/18] Fetching: [Single Market] Will Donald J. Trump win the U.S. 2024 Repub...
+    ✓ Got 1183 price points
+  [12/18] Fetching: [Single Market] Will Joe Biden win the U.S. 2024 Democratic ...
+    ✓ Got 1174 price points
+  [13/18] Fetching: NFL Sunday: Bengals vs. Chiefs...
+    ✓ Got 168 price points
+  [14/18] Fetching: NFL Sunday: 49ers vs. Eagles...
+    ✓ Got 169 price points
+  [15/18] Fetching: Will US inflation be more than 0.4% from December 2022 to Ja...
+    ✓ Got 188 price points
+  [16/18] Fetching: Will Xi Jinping remain General Secretary of the CCP through ...
+    ✗ No history returned
+  [17/18] Fetching: Did Jaan Tallinn bail out SBF?...
+    ✓ Got 182 price points
+  [18/18] Fetching: Will Ali Khamenei remain Supreme Leader of Iran through June...
+    ✓ Got 257 price points
+
+  Price histories fetched: 13 success, 5 failed
+  Saved price histories → /workspace/data/price_histories_sample.json
+
+======================================================================
+STEP 6: Plotting market timeline visualizations
+======================================================================
+  Saved timeline chart → /workspace/output/market_timelines.png
+  Saved overlay chart → /workspace/output/market_timelines_overlay.png
+
+======================================================================
+STEP 7: Basic calibration preview (final price vs outcome)
+======================================================================
+  Markets with both price and outcome: 50
+
+  Calibration table (predicted vs observed):
+           Bin   Predicted    Observed      N
+  ------------------------------------------
+       0.0-0.1       0.000       0.000     37
+       0.9-1.0       1.000       1.000     13
+
+  Saved calibration table → /workspace/output/calibration_preview.csv
+
+  Brier Score (final prices): 0.0000
+  (Reference: 0.25 = always predicting 0.5, 0.0 = perfect)
+  Saved calibration chart → /workspace/output/calibration_preview.png
+  Saved sharpness chart → /workspace/output/sharpness_distribution.png
+
+======================================================================
+STEP 8: Generating analysis report
+======================================================================
+  Saved report → /workspace/output/analysis_1_report.txt
+
+======================================================================
+ANALYSIS 1 REPORT: What Are Prediction Markets Actually Predicting?
+======================================================================
+Generated: 2026-05-10T06:02:40.035778+00:00
+
+──────────────────────────────────────────────────────────────────────
+DATA COLLECTION SUMMARY
+──────────────────────────────────────────────────────────────────────
+  Total markets fetched: 200
+  Binary markets with outcomes: 50
+  Resolved YES: 13
+  Resolved NO: 37
+  Base rate (YES): 0.065
+  Date range: 2022-01-11 02:13:47.363000+00:00 to 2024-11-08 12:00:00+00:00
+  Median volume: $6,368.74
+  Median duration: 19.2 days
+
+──────────────────────────────────────────────────────────────────────
+CATEGORY DISTRIBUTION
+──────────────────────────────────────────────────────────────────────
+  sports              :   64
+  other               :   60
+  politics            :   50
+  crypto              :   11
+  tech/ai             :    8
+  economics           :    7
+
+──────────────────────────────────────────────────────────────────────
+PRICE HISTORY SAMPLING
+──────────────────────────────────────────────────────────────────────
+  Markets sampled for price history: 13
+  Total price points collected: 5884
+
+──────────────────────────────────────────────────────────────────────
+CALIBRATION PREVIEW
+──────────────────────────────────────────────────────────────────────
+  Brier Score: 0.0000
+  Markets in calibration: 50
+  NOTE: Final prices may reflect resolution certainty (see plan caveats).
+  A full dynamics-based calibration analysis is needed for Section 2.
+
+──────────────────────────────────────────────────────────────────────
+STATISTICAL CAVEATS (from Validation Plan)
+──────────────────────────────────────────────────────────────────────
+  1. Market prices are NOT IID forecasts
+  2. Final prices may reflect resolution certainty, not forecast quality
+  3. Relative-time normalization standardizes chronology, not information
+  4. Longshot-bias interpretation is fragile in prediction markets
+  5. Bootstrap CIs assume market-level independence
+  6. Representative sampling weights by market count, not economic importance
+
+──────────────────────────────────────────────────────────────────────
+OUTPUT FILES GENERATED
+──────────────────────────────────────────────────────────────────────
+  markets_cleaned.csv                             103.7 KB
+  price_histories_sample.json                     349.3 KB
+  analysis_1_report.txt                             4.6 KB
+  calibration_preview.csv                         81 bytes
+  calibration_preview.png                          73.8 KB
+  category_distribution.png                        55.4 KB
+  market_summary_statistics.json                 490 bytes
+  market_timelines.png                            421.7 KB
+  market_timelines_overlay.png                    241.0 KB
+  run_log.txt                                      0 bytes
+  schema_validation_report.json                  835 bytes
+  sharpness_distribution.png                       48.4 KB
+
+======================================================================
+END OF REPORT
+======================================================================
+
+  Completed: 2026-05-10T06:02:40.036331+00:00
+██████████████████████████████████████████████████████████████████████
