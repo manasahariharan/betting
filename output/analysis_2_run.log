@@ -1,0 +1,72 @@
+
+██████████████████████████████████████████████████████████████████████
+  ANALYSIS 2: LONGSHOT BIAS (DEEP DIVE 1)
+██████████████████████████████████████████████████████████████████████
+  Started: 2026-05-10T08:02:26.054363+00:00
+======================================================================
+STEP 1: Load Analysis 1 dataset
+======================================================================
+  Loaded 1000 rows from markets_clean.csv
+  With CLOB price: 806/1000
+  Base rate: 0.3027 (244 YES / 806)
+
+======================================================================
+STEP 2: Tail calibration & log-odds regression
+======================================================================
+  Longshots (p <= 0.15): n=420, YES=3
+  Favorites (p >= 0.85): n=94, YES=93
+  Full-sample slope: 1.35023 95% CI [1.18118, 1.5907]
+  Full-sample slope (cat-stratified bootstrap): 1.35023 CI [1.18006, 1.6172]
+  Mean overpricing pp — longshots: 1.3001, favorites: -2.6351, full: 0.1913
+
+======================================================================
+STEP 3: Volume stratification
+======================================================================
+  Median volume: $58,610.96
+  Low-vol (<= median):  n=403, longshots=179
+  High-vol (> median):  n=403, longshots=241
+  Median-split tiers:
+    low  : n= 403  full_slope=1.50895  longshot_pp=3.0902
+    high : n= 403  full_slope=1.23229  longshot_pp=-0.0295
+
+======================================================================
+STEP 4: Per-category longshot bias
+======================================================================
+  Business        total=  27  longshots= 16  YES= 0  overpricing_pp=1.4656  slope=None
+  Crypto          total=  57  longshots= 36  YES= 0  overpricing_pp=1.0  slope=None
+  Other           total=  58  longshots= 26  YES= 0  overpricing_pp=2.5923  slope=None
+  Politics        total= 382  longshots=208  YES= 2  overpricing_pp=1.0358  slope=None
+  Pop Culture     total=  29  longshots= 25  YES= 0  overpricing_pp=1.528  slope=None
+  Sports          total= 253  longshots=109  YES= 1  overpricing_pp=1.5188  slope=None
+
+======================================================================
+STEP 5: Hall of Shame (top 25 most confidently wrong)
+======================================================================
+   1. ( -96.6pp) [Politics   ] Matt Gaetz out as Congressman in 2024?
+   2. ( -86.0pp) [Sports     ] Will Letsile Tebogo (BOT) win Gold in 200m?
+   3. ( -86.0pp) [Politics   ] US call for Gaza ceasefire before March?
+   4. ( +85.5pp) [Politics   ] Will Trump win Vermont Republican Primary?
+   5. ( -83.5pp) [Pop Culture] MrBeast fires Kris in July?
+   6. ( -82.0pp) [Business   ] Will US gain 250k-300k jobs in February?
+   7. ( +79.5pp) [Politics   ] No Israel strike Iran on by Sunday Oct 27?
+   8. ( +79.5pp) [Pop Culture] Will Elon tweet 60-74 times?
+   9. ( +79.5pp) [Politics   ] Will RFK Jr. say "Endorse" during Friday address?
+  10. ( -78.2pp) [Politics   ] Will Taylor Swift be the 2023 TIME Person of the Year?
+
+======================================================================
+STEP 6: Hidden Gems (top 15 longshots that resolved YES)
+======================================================================
+  Eligible (priced <= 0.1, resolved YES): 1
+   1. (priced 0.034) [Politics   ] Matt Gaetz out as Congressman in 2024?
+
+======================================================================
+STEP 7: Save outputs
+======================================================================
+  /workspace/output/longshot_data.json (6.2 KB)
+  /workspace/output/longshot_volume.json (6.5 KB)
+  /workspace/output/longshot_category.json (7.6 KB)
+  /workspace/output/hall_of_shame.json (10.2 KB)
+  /workspace/output/hidden_gems.json (0.6 KB)
+
+  Completed: 2026-05-10T08:02:30.128293+00:00 (4.1s)
+██████████████████████████████████████████████████████████████████████
