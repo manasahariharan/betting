@@ -1,0 +1,282 @@
+{
+  "generated": "2026-05-10T08:02:30.127639+00:00",
+  "description": "Top 25 markets where the final crowd price diverged most from the realised outcome. Sorted by |final_yes_price - resolved_yes|.",
+  "n_total_with_prices": 806,
+  "markets": [
+    {
+      "market_id": "507545",
+      "question": "Matt Gaetz out as Congressman in 2024?",
+      "slug": "matt-gaetz-out-as-congressman-in-2024",
+      "url": "https://polymarket.com/event/matt-gaetz-out-as-congressman-in-2024",
+      "category": "Politics",
+      "volume": 234865.82,
+      "final_yes_price": 0.034,
+      "resolved_yes": 1,
+      "end_date": "2024-12-31T12:00:00Z"
+    },
+    {
+      "market_id": "503710",
+      "question": "Will Letsile Tebogo (BOT) win Gold in 200m?",
+      "slug": "will-letsile-tebogo-bot-win-gold-in-200m",
+      "url": "https://polymarket.com/event/will-letsile-tebogo-bot-win-gold-in-200m",
+      "category": "Sports",
+      "volume": 61682.14,
+      "final_yes_price": 0.14,
+      "resolved_yes": 1,
+      "end_date": "2024-08-08T12:00:00Z"
+    },
+    {
+      "market_id": "254033",
+      "question": "US call for Gaza ceasefire before March?",
+      "slug": "us-call-for-gaza-ceasefire-before-march",
+      "url": "https://polymarket.com/event/us-call-for-gaza-ceasefire-before-march",
+      "category": "Politics",
+      "volume": 74934.74,
+      "final_yes_price": 0.14,
+      "resolved_yes": 1,
+      "end_date": "2024-02-29T00:00:00Z"
+    },
+    {
+      "market_id": "255295",
+      "question": "Will Trump win Vermont Republican Primary?",
+      "slug": "will-trump-win-vermont-republican-primary",
+      "url": "https://polymarket.com/event/will-trump-win-vermont-republican-primary",
+      "category": "Politics",
+      "volume": 233416.04,
+      "final_yes_price": 0.855,
+      "resolved_yes": 0,
+      "end_date": "2024-03-04T00:00:00Z"
+    },
+    {
+      "market_id": "504000",
+      "question": "MrBeast fires Kris in July?",
+      "slug": "mrbeast-fires-kris-in-july",
+      "url": "https://polymarket.com/event/mrbeast-fires-kris-in-july",
+      "category": "Pop Culture",
+      "volume": 27220.22,
+      "final_yes_price": 0.165,
+      "resolved_yes": 1,
+      "end_date": "2024-07-31T12:00:00Z"
+    },
+    {
+      "market_id": "254275",
+      "question": "Will US gain 250k-300k jobs in February?",
+      "slug": "will-us-gain-250k-300k-jobs-in-february",
+      "url": "https://polymarket.com/event/will-us-gain-250k-300k-jobs-in-february",
+      "category": "Business",
+      "volume": 10104.67,
+      "final_yes_price": 0.18,
+      "resolved_yes": 1,
+      "end_date": "2024-03-05T00:00:00Z"
+    },
+    {
+      "market_id": "510221",
+      "question": "No Israel strike Iran on by Sunday Oct 27?",
+      "slug": "no-israel-strike-iran-on-by-sunday-oct-27",
+      "url": "https://polymarket.com/event/no-israel-strike-iran-on-by-sunday-oct-27",
+      "category": "Politics",
+      "volume": 171248.52,
+      "final_yes_price": 0.795,
+      "resolved_yes": 0,
+      "end_date": "2024-10-27T12:00:00Z"
+    },
+    {
+      "market_id": "501519",
+      "question": "Will Elon tweet 60-74 times?",
+      "slug": "will-elon-tweet-60-74-times-may-10",
+      "url": "https://polymarket.com/event/will-elon-tweet-60-74-times-may-10",
+      "category": "Pop Culture",
+      "volume": 44849.58,
+      "final_yes_price": 0.795,
+      "resolved_yes": 0,
+      "end_date": "2024-05-17T12:00:00Z"
+    },
+    {
+      "market_id": "505579",
+      "question": "Will RFK Jr. say \"Endorse\" during Friday address?",
+      "slug": "will-rfk-jr-say-endorse-during-friday-address",
+      "url": "https://polymarket.com/event/will-rfk-jr-say-endorse-during-friday-address",
+      "category": "Politics",
+      "volume": 80672.95,
+      "final_yes_price": 0.795,
+      "resolved_yes": 0,
+      "end_date": "2024-08-23T12:00:00Z"
+    },
+    {
+      "market_id": "253237",
+      "question": "Will Taylor Swift be the 2023 TIME Person of the Year?",
+      "slug": "will-taylor-swift-be-the-2023-time-person-of-the-year",
+      "url": "https://polymarket.com/event/will-taylor-swift-be-the-2023-time-person-of-the-year",
+      "category": "Politics",
+      "volume": 32634.83,
+      "final_yes_price": 0.2175,
+      "resolved_yes": 1,
+      "end_date": "2023-01-14T00:00:00Z"
+    },
+    {
+      "market_id": "507445",
+      "question": "Will Kamala Harris say \"black\" 3 or more times during Oprah livestream?",
+      "slug": "will-kamala-harris-say-black-3-or-more-times-during-oprah-livestream",
+      "url": "https://polymarket.com/event/will-kamala-harris-say-black-3-or-more-times-during-oprah-livestream",
+      "category": "Politics",
+      "volume": 71267.02,
+      "final_yes_price": 0.77,
+      "resolved_yes": 0,
+      "end_date": "2024-09-19T12:00:00Z"
+    },
+    {
+      "market_id": "510370",
+      "question": "Clippers vs. Nuggets",
+      "slug": "nba-lac-den-2024-10-26",
+      "url": "https://polymarket.com/event/nba-lac-den-2024-10-26",
+      "category": "Sports",
+      "volume": 106223.95,
+      "final_yes_price": 0.24,
+      "resolved_yes": 1,
+      "end_date": "2024-10-26T21:00:00Z"
+    },
+    {
+      "market_id": "502838",
+      "question": "Will Austria win?",
+      "slug": "will-austria-win-june-25",
+      "url": "https://polymarket.com/event/will-austria-win-june-25",
+      "category": "Sports",
+      "volume": 112702.99,
+      "final_yes_price": 0.245,
+      "resolved_yes": 1,
+      "end_date": "2024-06-25T12:00:00Z"
+    },
+    {
+      "market_id": "500819",
+      "question": "Who will advance: Barcelona or PSG?",
+      "slug": "who-will-advance-barcelona-or-psg",
+      "url": "https://polymarket.com/event/who-will-advance-barcelona-or-psg",
+      "category": "Sports",
+      "volume": 11052.22,
+      "final_yes_price": 0.755,
+      "resolved_yes": 0,
+      "end_date": "2024-04-16T12:00:00Z"
+    },
+    {
+      "market_id": "504569",
+      "question": "Olympic Basketball: Canada vs. France",
+      "slug": "olympic-basketball-canada-vs-france",
+      "url": "https://polymarket.com/event/olympic-basketball-canada-vs-france",
+      "category": "Sports",
+      "volume": 91379.61,
+      "final_yes_price": 0.755,
+      "resolved_yes": 0,
+      "end_date": "2024-08-06T12:00:00Z"
+    },
+    {
+      "market_id": "501266",
+      "question": "Ethereum above $3,000 on May 10?",
+      "slug": "ethereum-above-3000-on-may-10",
+      "url": "https://polymarket.com/event/ethereum-above-3000-on-may-10",
+      "category": "Crypto",
+      "volume": 29784.64,
+      "final_yes_price": 0.755,
+      "resolved_yes": 0,
+      "end_date": "2024-05-10T12:00:00Z"
+    },
+    {
+      "market_id": "505957",
+      "question": "Will Kamala Harris say \"Democracy\" during CNN interview?",
+      "slug": "will-kamala-harris-say-democracy-during-cnn-interview",
+      "url": "https://polymarket.com/event/will-kamala-harris-say-democracy-during-cnn-interview",
+      "category": "Politics",
+      "volume": 39853.81,
+      "final_yes_price": 0.755,
+      "resolved_yes": 0,
+      "end_date": "2024-08-29T12:00:00Z"
+    },
+    {
+      "market_id": "508660",
+      "question": "Giants vs. Seahawks",
+      "slug": "nfl-nyg-sea-2024-10-06",
+      "url": "https://polymarket.com/event/nfl-nyg-sea-2024-10-06",
+      "category": "Sports",
+      "volume": 63347.51,
+      "final_yes_price": 0.25,
+      "resolved_yes": 1,
+      "end_date": "2024-10-06T12:00:00Z"
+    },
+    {
+      "market_id": "509799",
+      "question": "Will Trump say \"tax\" 15 or more times during Georgia speech on Oct 15?",
+      "slug": "will-trump-say-tax-15-or-more-times-during-georgia-speech-on-oct-15",
+      "url": "https://polymarket.com/event/will-trump-say-tax-15-or-more-times-during-georgia-speech-on-oct-15",
+      "category": "Politics",
+      "volume": 233825.27,
+      "final_yes_price": 0.745,
+      "resolved_yes": 0,
+      "end_date": "2024-10-15T12:00:00Z"
+    },
+    {
+      "market_id": "508125",
+      "question": "Will Donald Trump say \"Tip\" during his Michigan town hall?",
+      "slug": "will-donald-trump-say-tampon-during-his-michigan-town-hall",
+      "url": "https://polymarket.com/event/will-donald-trump-say-tampon-during-his-michigan-town-hall",
+      "category": "Politics",
+      "volume": 30817.14,
+      "final_yes_price": 0.735,
+      "resolved_yes": 0,
+      "end_date": "2024-09-27T12:00:00Z"
+    },
+    {
+      "market_id": "508186",
+      "question": "Gomis vs. Brito",
+      "slug": "gomis-vs-brito",
+      "url": "https://polymarket.com/event/gomis-vs-brito",
+      "category": "Sports",
+      "volume": 19105.34,
+      "final_yes_price": 0.265,
+      "resolved_yes": 1,
+      "end_date": "2024-09-28T12:00:00Z"
+    },
+    {
+      "market_id": "509797",
+      "question": "Will Trump say \"border\" 20 or more times during Georgia speech on Oct 15?",
+      "slug": "will-trump-say-border-20-or-more-times-during-georgia-speech-on-oct-15",
+      "url": "https://polymarket.com/event/will-trump-say-border-20-or-more-times-during-georgia-speech-on-oct-15",
+      "category": "Politics",
+      "volume": 67807.25,
+      "final_yes_price": 0.73,
+      "resolved_yes": 0,
+      "end_date": "2024-10-15T12:00:00Z"
+    },
+    {
+      "market_id": "504496",
+      "question": "US adds between 100k and 150k jobs in August?",
+      "slug": "us-adds-between-100k-and-150k-jobs-in-august",
+      "url": "https://polymarket.com/event/us-adds-between-100k-and-150k-jobs-in-august",
+      "category": "Politics",
+      "volume": 41439.69,
+      "final_yes_price": 0.27,
+      "resolved_yes": 1,
+      "end_date": "2024-09-06T12:00:00Z"
+    },
+    {
+      "market_id": "503669",
+      "question": "Will Noah Lyles (USA) win Gold in 100m?",
+      "slug": "will-noah-lyles-usa-win-gold-in-100m",
+      "url": "https://polymarket.com/event/will-noah-lyles-usa-win-gold-in-100m",
+      "category": "Sports",
+      "volume": 158374.56,
+      "final_yes_price": 0.27,
+      "resolved_yes": 1,
+      "end_date": "2024-08-04T12:00:00Z"
+    },
+    {
+      "market_id": "510310",
+      "question": "Will Trump say \"Border\" 30 or more times during North Carolina rally October 22?",
+      "slug": "will-trump-say-border-30-or-more-times-during-north-carolina-rally-october-22",
+      "url": "https://polymarket.com/event/will-trump-say-border-30-or-more-times-during-north-carolina-rally-october-22",
+      "category": "Politics",
+      "volume": 104538.16,
+      "final_yes_price": 0.275,
+      "resolved_yes": 1,
+      "end_date": "2024-10-22T12:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "generated": "2026-05-10T08:02:30.127401+00:00",
+  "source": "Analysis 1 output: data/markets_clean.csv (stratified sample of resolved Polymarket markets, final_yes_price = CLOB second-to-last 12hr tick)",
+  "methodology": {
+    "longshot_threshold": 0.15,
+    "favorite_threshold": 0.85,
+    "log_odds_regression": "logistic regression of resolved_yes on log(p/(1-p)); prices clipped to [0.01, 0.99]; unpenalised MLE (sklearn LogisticRegression with C=1e9). Slope is reported as null when the subset is near-separated (minority class < 5%) because the MLE diverges in that regime; use mean overpricing pp instead.",
+    "bootstrap": "market-level resampling, B=500, seed=42; CIs reported as 2.5%/97.5%. Independence assumption may understate uncertainty for markets with correlated event structure (e.g. multiple markets on the same election).",
+    "interpretation": {
+      "slope_eq_1_intercept_eq_0": "perfect calibration",
+      "slope_lt_1": "overconfident \u2014 prices more extreme than realised frequencies",
+      "slope_gt_1": "underconfident \u2014 prices compressed toward 50% (classic favorite-longshot pattern direction)"
+    },
+    "overpricing_pp": "mean(final_yes_price - resolved_yes) * 100. Positive = crowd assigned more probability than the realised rate."
+  },
+  "language_note": "Phrasing follows POLYMARKET_PROJECT_PLAN.md \"Future Improvements\" guidance: 'consistent with', 'appears', 'one possible interpretation' \u2014 not 'proves' or 'demonstrates'.",
+  "description": "Per-category longshot bias. Slope only fitted when n_longshots >= 15; otherwise only mean overpricing is reported.",
+  "min_longshot_n_for_slope": 15,
+  "categories": {
+    "Business": {
+      "n_markets_total": 27,
+      "n_longshots": 16,
+      "n_longshots_resolved_yes": 0,
+      "longshot_base_rate": 0.0,
+      "longshot_overpricing_pp": 1.4656,
+      "longshot_log_odds": {
+        "slope": null,
+        "intercept": null,
+        "slope_ci_lower": null,
+        "slope_ci_upper": null,
+        "intercept_ci_lower": null,
+        "intercept_ci_upper": null,
+        "p_slope_lt_1": null,
+        "n_bootstrap": 0,
+        "stratified": false,
+        "warning": "minority-class share below 5% \u2014 logistic MLE is unstable / diverges; slope omitted (use mean overpricing pp instead)"
+      },
+      "full_log_odds": {
+        "slope": 1.40041,
+        "intercept": 0.71227,
+        "slope_ci_lower": 0.90171,
+        "slope_ci_upper": 84.06435,
+        "intercept_ci_lower": -13.08364,
+        "intercept_ci_upper": 134.77769,
+        "p_slope_lt_1": 0.054,
+        "n_bootstrap": 500,
+        "stratified": false,
+        "ci_wide": true
+      },
+      "slope_status": "fitted"
+    },
+    "Crypto": {
+      "n_markets_total": 57,
+      "n_longshots": 36,
+      "n_longshots_resolved_yes": 0,
+      "longshot_base_rate": 0.0,
+      "longshot_overpricing_pp": 1.0,
+      "longshot_log_odds": {
+        "slope": null,
+        "intercept": null,
+        "slope_ci_lower": null,
+        "slope_ci_upper": null,
+        "intercept_ci_lower": null,
+        "intercept_ci_upper": null,
+        "p_slope_lt_1": null,
+        "n_bootstrap": 0,
+        "stratified": false,
+        "warning": "minority-class share below 5% \u2014 logistic MLE is unstable / diverges; slope omitted (use mean overpricing pp instead)"
+      },
+      "full_log_odds": {
+        "slope": 3.39263,
+        "intercept": -2.15965,
+        "slope_ci_lower": 1.76919,
+        "slope_ci_upper": 65.377,
+        "intercept_ci_lower": -74.10388,
+        "intercept_ci_upper": -0.02701,
+        "p_slope_lt_1": 0.0,
+        "n_bootstrap": 500,
+        "stratified": false,
+        "ci_wide": true
+      },
+      "slope_status": "fitted"
+    },
+    "Other": {
+      "n_markets_total": 58,
+      "n_longshots": 26,
+      "n_longshots_resolved_yes": 0,
+      "longshot_base_rate": 0.0,
+      "longshot_overpricing_pp": 2.5923,
+      "longshot_log_odds": {
+        "slope": null,
+        "intercept": null,
+        "slope_ci_lower": null,
+        "slope_ci_upper": null,
+        "intercept_ci_lower": null,
+        "intercept_ci_upper": null,
+        "p_slope_lt_1": null,
+        "n_bootstrap": 0,
+        "stratified": false,
+        "warning": "minority-class share below 5% \u2014 logistic MLE is unstable / diverges; slope omitted (use mean overpricing pp instead)"
+      },
+      "full_log_odds": {
+        "slope": 40.14645,
+        "intercept": 0.35419,
+        "slope_ci_lower": 5.22116,
+        "slope_ci_upper": 64.23178,
+        "intercept_ci_lower": -0.69248,
+        "intercept_ci_upper": 1.6448,
+        "p_slope_lt_1": 0.0,
+        "n_bootstrap": 500,
+        "stratified": false,
+        "ci_wide": true
+      },
+      "slope_status": "fitted"
+    },
+    "Politics": {
+      "n_markets_total": 382,
+      "n_longshots": 208,
+      "n_longshots_resolved_yes": 2,
+      "longshot_base_rate": 0.0096,
+      "longshot_overpricing_pp": 1.0358,
+      "longshot_log_odds": {
+        "slope": null,
+        "intercept": null,
+        "slope_ci_lower": null,
+        "slope_ci_upper": null,
+        "intercept_ci_lower": null,
+        "intercept_ci_upper": null,
+        "p_slope_lt_1": null,
+        "n_bootstrap": 0,
+        "stratified": false,
+        "warning": "minority-class share below 5% \u2014 logistic MLE is unstable / diverges; slope omitted (use mean overpricing pp instead)"
+      },
+      "full_log_odds": {
+        "slope": 1.26581,
+        "intercept": 0.08986,
+        "slope_ci_lower": 1.05586,
+        "slope_ci_upper": 1.62977,
+        "intercept_ci_lower": -0.30336,
+        "intercept_ci_upper": 0.53152,
+        "p_slope_lt_1": 0.002,
+        "n_bootstrap": 500,
+        "stratified": false,
+        "ci_wide": false
+      },
+      "slope_status": "fitted"
+    },
+    "Pop Culture": {
+      "n_markets_total": 29,
+      "n_longshots": 25,
+      "n_longshots_resolved_yes": 0,
+      "longshot_base_rate": 0.0,
+      "longshot_overpricing_pp": 1.528,
+      "longshot_log_odds": {
+        "slope": null,
+        "intercept": null,
+        "slope_ci_lower": null,
+        "slope_ci_upper": null,
+        "intercept_ci_lower": null,
+        "intercept_ci_upper": null,
+        "p_slope_lt_1": null,
+        "n_bootstrap": 0,
+        "stratified": false,
+        "warning": "minority-class share below 5% \u2014 logistic MLE is unstable / diverges; slope omitted (use mean overpricing pp instead)"
+      },
+      "full_log_odds": {
+        "slope": 0.71597,
+        "intercept": -0.6859,
+        "slope_ci_lower": 0.33536,
+        "slope_ci_upper": 23.25143,
+        "intercept_ci_lower": -2.33075,
+        "intercept_ci_upper": 44.94956,
+        "p_slope_lt_1": 0.6707,
+        "n_bootstrap": 416,
+        "stratified": false,
+        "ci_wide": true
+      },
+      "slope_status": "fitted"
+    },
+    "Sports": {
+      "n_markets_total": 253,
+      "n_longshots": 109,
+      "n_longshots_resolved_yes": 1,
+      "longshot_base_rate": 0.0092,
+      "longshot_overpricing_pp": 1.5188,
+      "longshot_log_odds": {
+        "slope": null,
+        "intercept": null,
+        "slope_ci_lower": null,
+        "slope_ci_upper": null,
+        "intercept_ci_lower": null,
+        "intercept_ci_upper": null,
+        "p_slope_lt_1": null,
+        "n_bootstrap": 0,
+        "stratified": false,
+        "warning": "minority-class share below 5% \u2014 logistic MLE is unstable / diverges; slope omitted (use mean overpricing pp instead)"
+      },
+      "full_log_odds": {
+        "slope": 1.50353,
+        "intercept": -0.10727,
+        "slope_ci_lower": 1.1868,
+        "slope_ci_upper": 2.10091,
+        "intercept_ci_lower": -0.51543,
+        "intercept_ci_upper": 0.3049,
+        "p_slope_lt_1": 0.0,
+        "n_bootstrap": 500,
+        "stratified": false,
+        "ci_wide": false
+      },
+      "slope_status": "fitted"
+    }
+  }
+}
