@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Crowds Get Probability Wrong</title>
+<meta name="description" content="A scrollytelling data story on behavioral biases in prediction markets, analyzing calibration, longshot bias, and dynamics across 800+ resolved Polymarket markets.">
+<style>
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --bg-card-hover: #1c2333;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --text-dim: #6e7681;
+  --accent: #58a6ff;
+  --accent-dim: #1f6feb;
+  --green: #3fb950;
+  --green-dim: #238636;
+  --red: #f85149;
+  --red-dim: #da3633;
+  --orange: #d29922;
+  --purple: #bc8cff;
+  --border: #30363d;
+  --diagonal: #484f58;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+.wide-container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 24px;
+  position: relative;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(transparent, var(--bg));
+  pointer-events: none;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero .subtitle {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.hero-stat {
+  text-align: center;
+}
+.hero-stat .value {
+  font-size: 2.4rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  display: block;
+}
+.hero-stat .label {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  animation: bob 2s ease-in-out infinite;
+  z-index: 1;
+}
+@keyframes bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* Sections */
+section { padding: 80px 0; }
+
+.section-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+p { margin-bottom: 1.2em; color: var(--text-muted); }
+p.lead { font-size: 1.1rem; color: var(--text); }
+
+.highlight { color: var(--accent); font-weight: 600; }
+.highlight-green { color: var(--green); font-weight: 600; }
+.highlight-red { color: var(--red); font-weight: 600; }
+.highlight-orange { color: var(--orange); font-weight: 600; }
+.highlight-purple { color: var(--purple); font-weight: 600; }
+
+blockquote {
+  border-left: 3px solid var(--accent-dim);
+  padding: 12px 20px;
+  margin: 24px 0;
+  color: var(--text);
+  font-style: italic;
+  background: rgba(88,166,255,0.05);
+  border-radius: 0 8px 8px 0;
+}
+
+/* Scrollytelling */
+.scrolly {
+  position: relative;
+  display: flex;
+}
+.scrolly__chart {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 55%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 20px;
+}
+.scrolly__chart .chart-box {
+  width: 100%;
+  max-width: 560px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+}
+.chart-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.chart-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.chart-box svg { overflow: visible; }
+
+.scrolly__steps {
+  width: 45%;
+  padding: 100vh 24px 100vh 32px;
+}
+.scrolly__step {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+}
+.scrolly__step .step-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  transition: opacity 0.4s, border-color 0.4s;
+  opacity: 0.3;
+}
+.scrolly__step.is-active .step-content {
+  opacity: 1;
+  border-color: var(--accent-dim);
+}
+.step-content h3 { margin-bottom: 8px; }
+.step-content p { margin-bottom: 0.8em; font-size: 0.95rem; }
+.step-content p:last-child { margin-bottom: 0; }
+
+/* Metric chips */
+.metric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  background: rgba(88,166,255,0.08);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin: 4px 2px;
+}
+.metric .metric-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* Dynamics line chart */
+.dynamics-chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+}
+
+/* Cards grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 32px 0;
+}
+.market-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: border-color 0.3s, transform 0.3s;
+  cursor: default;
+}
+.market-card:hover {
+  border-color: var(--accent-dim);
+  transform: translateY(-2px);
+}
+.market-card .card-category {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.market-card .card-question {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.market-card .card-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.card-price {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.card-price.yes { color: var(--green); }
+.card-price.no { color: var(--red); }
+.card-sparkline {
+  height: 30px;
+  width: 80px;
+}
+.card-volume {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.card-outcome {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.card-outcome.resolved-yes { background: var(--green-dim); color: var(--green); }
+.card-outcome.resolved-no { background: var(--red-dim); color: var(--red); }
+
+/* Category toggles */
+.category-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+.cat-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-sans);
+}
+.cat-btn:hover { border-color: var(--accent-dim); color: var(--text); }
+.cat-btn.active { background: var(--accent-dim); border-color: var(--accent); color: #fff; }
+
+/* Methodology note */
+.methodology-note {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 40px 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+.methodology-note summary {
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+footer {
+  padding: 60px 0 40px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .scrolly { flex-direction: column; }
+  .scrolly__chart {
+    position: sticky;
+    width: 100%;
+    height: 50vh;
+    padding: 12px;
+  }
+  .scrolly__steps {
+    width: 100%;
+    padding: 40vh 16px 40vh 16px;
+  }
+  .hero-stats { gap: 32px; }
+  .hero-stat .value { font-size: 1.8rem; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .chart-box { padding: 16px; }
+}
+
+/* Plot overrides */
+.chart-box [aria-label="tip"] {
+  font-family: var(--font-sans) !important;
+  font-size: 12px !important;
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div>
+    <h1>How Crowds Get Probability Wrong</h1>
+    <p class="subtitle">
+      We analyzed <strong>806 resolved Polymarket markets</strong> to test whether prediction market
+      prices behave like well-calibrated probabilities&mdash;and where they break down.
+    </p>
+    <div class="hero-stats" id="hero-stats"></div>
+  </div>
+  <div class="scroll-hint">Scroll to explore &darr;</div>
+</header>
+
+<!-- SECTION 1: What Are Prediction Markets? -->
+<section id="section-1">
+  <div class="container">
+    <div class="section-label">Part 1</div>
+    <h2>What Are Prediction Markets Actually Predicting?</h2>
+    <p class="lead">
+      A prediction market puts a price on the future. If a market says an event has a
+      <span class="highlight">72% chance</span> of happening, that price should&mdash;in theory&mdash;mean
+      roughly 72 out of 100 similar events would actually occur.
+    </p>
+    <p>
+      But do these prices actually mean what they claim? Can a number on a trading screen be trusted
+      as a genuine probability?
+    </p>
+  </div>
+</section>
+
+<!-- Section 1 scrolly: single market timeline -->
+<div class="scrolly" id="scrolly-timeline">
+  <div class="scrolly__chart">
+    <div class="chart-box">
+      <div class="chart-title" id="timeline-title">Market Timeline</div>
+      <div class="chart-subtitle" id="timeline-subtitle">How a single market probability evolves toward resolution</div>
+      <div id="timeline-chart"></div>
+    </div>
+  </div>
+  <div class="scrolly__steps">
+    <div class="scrolly__step" data-step="tl-open">
+      <div class="step-content">
+        <h3>A market opens</h3>
+        <p>
+          In November 2023, Polymarket opened a question:
+          <em>"Will Matt Gaetz be out as Congressman in 2024?"</em>
+        </p>
+        <p>The opening price: just <span class="highlight">3.4%</span>. The crowd thought it was extremely unlikely.</p>
+      </div>
+    </div>
+    <div class="scrolly__step" data-step="tl-mid">
+      <div class="step-content">
+        <h3>Probabilities fluctuate</h3>
+        <p>
+          Over time, traders update the price as new information arrives&mdash;news stories,
+          political developments, rumors. The probability drifts but stays low.
+        </p>
+        <p>This is the market processing information in real time.</p>
+      </div>
+    </div>
+    <div class="scrolly__step" data-step="tl-resolve">
+      <div class="step-content">
+        <h3>Then the surprise</h3>
+        <p>
+          Gaetz resigned from Congress in November 2024 after being nominated as Attorney General.
+          The market resolved <span class="highlight-green">YES</span>&mdash;an outcome the crowd
+          had priced at just 3.4%.
+        </p>
+        <p>This was the <strong>single most confidently wrong</strong> market in our entire sample.</p>
+      </div>
+    </div>
+    <div class="scrolly__step" data-step="tl-question">
+      <div class="step-content">
+        <h3>The question this raises</h3>
+        <p>
+          Was this an unlucky outlier, or part of a pattern? When markets say "3% chance,"
+          does that event really happen about 3% of the time?
+        </p>
+        <p>This is the question of <strong>calibration</strong>&mdash;and it's what we set out to test across 806 markets.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: How Do Market Probabilities Behave? -->
+<section id="section-2">
+  <div class="container">
+    <div class="section-label">Part 2</div>
+    <h2>How Do Market Probabilities Behave?</h2>
+    <p class="lead">
+      A <strong>calibration chart</strong> answers the question directly. We group markets by their
+      predicted probability, then check how often those events actually happened.
+    </p>
+    <p>
+      If the crowd is perfectly calibrated, every point falls on the diagonal line&mdash;events priced
+      at 30% happen 30% of the time, events priced at 80% happen 80% of the time.
+    </p>
+  </div>
+</section>
+
+<!-- Section 2 scrolly: calibration -->
+<div class="scrolly" id="scrolly-calibration">
+  <div class="scrolly__chart">
+    <div class="chart-box">
+      <div class="chart-title" id="cal-title">Calibration Chart</div>
+      <div class="chart-subtitle" id="cal-subtitle">Predicted probability vs. observed outcome rate</div>
+      <div id="calibration-chart"></div>
+    </div>
+  </div>
+  <div class="scrolly__steps">
+    <div class="scrolly__step" data-step="cal-overall">
+      <div class="step-content">
+        <h3>Overall: reasonably well-calibrated</h3>
+        <p>
+          Across all 806 markets, Polymarket prices track actual outcomes fairly well.
+          The Brier Skill Score is <span class="metric"><span class="metric-label">BSS</span> 0.62</span>,
+          meaning the crowd outperforms a naive baseline by 62%.
+        </p>
+        <p>But the curve hints at something interesting in the middle range&hellip;</p>
+      </div>
+    </div>
+    <div class="scrolly__step" data-step="cal-early">
+      <div class="step-content">
+        <h3>Early in a market's life: noisy and uncertain</h3>
+        <p>
+          At <span class="highlight">10% of market lifetime elapsed</span>, calibration is rougher.
+          <span class="metric"><span class="metric-label">BSS</span> 0.46</span>&mdash;still better than
+          guessing, but prices bounce around the diagonal with less precision.
+        </p>
+        <p>Information is sparse early on. The crowd is making its best guess with limited data.</p>
+      </div>
+    </div>
+    <div class="scrolly__step" data-step="cal-mid">
+      <div class="step-content">
+        <h3>Midlife: improving, but mid-range prices are compressed</h3>
+        <p>
+          At <span class="highlight">50% elapsed</span>,
+          <span class="metric"><span class="metric-label">BSS</span> 0.58</span>.
+          The curve tightens at the extremes but shows compression in the 30&ndash;60% range&mdash;prices
+          cluster around 50% even when outcomes diverge.
+        </p>
+        <p>This pattern is consistent with <strong>underconfidence</strong>: the crowd hedges toward the middle.</p>
+      </div>
+    </div>
+    <div class="scrolly__step" data-step="cal-late">
+      <div class="step-content">
+        <h3>Near resolution: sharp and decisive</h3>
+        <p>
+          At <span class="highlight">90% elapsed</span>,
+          <span class="metric"><span class="metric-label">BSS</span> 0.68</span>.
+          The calibration curve snaps to the diagonal. Markets are pulling apart&mdash;winners go high,
+          losers go low.
+        </p>
+        <p>By the end, prices converge on truth. The crowd figures it out&mdash;eventually.</p>
+      </div>
+    </div>
+    <div class="scrolly__step" data-step="cal-final">
+      <div class="step-content">
+        <h3>Final prices: the best the crowd ever gets</h3>
+        <p>
+          Using the last available trading price,
+          <span class="metric"><span class="metric-label">BSS</span> 0.73</span>.
+          The curve hugs the diagonal closely.
+        </p>
+        <p>
+          But this number is partly inflated&mdash;by the time of the final price, resolution information
+          has often leaked into the market. The <em>dynamics</em> tell the more honest story.
+        </p>
+      </div>
+    </div>
+    <div class="scrolly__step" data-step="cal-category">
+      <div class="step-content">
+        <h3>Not all categories are equal</h3>
+        <p>
+          <span class="highlight-green">Crypto</span> markets are the best-calibrated
+          (<span class="metric"><span class="metric-label">BSS</span> 0.84</span>)&mdash;clear binary
+          outcomes, quantitative thresholds.
+        </p>
+        <p>
+          <span class="highlight-orange">Sports</span> lag behind
+          (<span class="metric"><span class="metric-label">BSS</span> 0.48</span>)&mdash;information
+          arrives at game time, not gradually.
+        </p>
+        <p>
+          <span class="highlight-purple">Politics</span> sits in between
+          (<span class="metric"><span class="metric-label">BSS</span> 0.67</span>).
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BSS dynamics line chart -->
+<section id="dynamics-section">
+  <div class="wide-container">
+    <div class="section-label">The dynamics trajectory</div>
+    <h2>When Does the Crowd Get It Right?</h2>
+    <p class="lead" style="max-width:720px;">
+      Brier Skill Score over each market's relative lifetime. The crowd steadily improves&mdash;but
+      the pace varies dramatically by category.
+    </p>
+    <div class="category-toggles" id="dynamics-toggles"></div>
+    <div class="dynamics-chart-container">
+      <div id="dynamics-line-chart"></div>
+    </div>
+    <p style="max-width:720px; font-size:0.9rem;">
+      <span class="highlight-orange">Sports markets</span> gain almost no accuracy over their lifetime
+      (BSS +0.08 from 10% to 95% elapsed). Information arrives at game time, not gradually&mdash;the
+      relative-time normalisation standardises chronology, not information arrival.
+      <span class="highlight-purple">Political markets</span> show the strongest convergence (+0.30),
+      consistent with gradual information incorporation.
+    </p>
+  </div>
+</section>
+
+<!-- SECTION 3: Where Were Markets Most Surprised? -->
+<section id="section-3">
+  <div class="container">
+    <div class="section-label">Part 3</div>
+    <h2>Where Were Markets Most Surprised?</h2>
+    <p class="lead">
+      Some predictions weren't just wrong&mdash;they were <em>confidently</em> wrong. These are the
+      markets where the crowd's price diverged most dramatically from reality.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wide-container">
+    <h3>The longshot pattern</h3>
+    <p style="max-width:720px;">
+      Of the <span class="highlight">420 markets</span> priced at 15% or below, the crowd overpriced them
+      by an average of <span class="highlight-red">1.3 percentage points</span>. That sounds tiny, but at
+      these low probabilities it means events were priced at roughly double their actual occurrence rate.
+    </p>
+    <p style="max-width:720px;">
+      High-volume markets show almost no overpricing (<span class="highlight-green">-0.03 pp</span>),
+      suggesting informed money corrects the bias. Low-volume markets overprice longshots by
+      <span class="highlight-red">3.1 pp</span>&mdash;where attention is thin, mispricing persists.
+    </p>
+
+    <h3 style="margin-top:40px;">The biggest surprises</h3>
+    <p style="max-width:720px;">
+      These are the markets where the final trading price was farthest from the actual outcome&mdash;the
+      crowd's most confident mistakes and most dramatic upsets.
+    </p>
+    <div class="cards-grid" id="surprise-cards"></div>
+
+    <details class="methodology-note" style="margin-top:60px;">
+      <summary>Methodology &amp; data notes</summary>
+      <p style="margin-top:12px;">
+        <strong>Sample:</strong> 1,000 resolved binary markets drawn via stratified sampling (proportional to category)
+        from ~10,000 Polymarket markets with volume &ge; $10k. 806 markets had valid CLOB price history
+        and are included in calibration analysis. 512 markets met the additional duration (&ge; 5 days) and
+        history observation (&ge; 4 ticks) filters for dynamics analysis.
+      </p>
+      <p>
+        <strong>Price source:</strong> CLOB <code>/prices-history</code> endpoint with <code>interval=max</code>,
+        <code>fidelity=720</code> (12-hour intervals). The second-to-last price tick is used as the forecast
+        price to avoid settlement contamination of the final tick.
+        <em>Never</em> uses <code>outcomePrices</code> from the Gamma API as forecast prices&mdash;those
+        reflect post-settlement values, not predictions.
+      </p>
+      <p>
+        <strong>Brier Skill Score:</strong> BSS = 1 - BS / Var(resolved_yes). Not strictly proper as a skill
+        score; asymptotically proper with large samples (Murphy 1973). Per-snapshot BSS denominators differ
+        slightly because Var(y) is computed on the markets that have a price at that snapshot.
+      </p>
+      <p>
+        <strong>Log-odds slope:</strong> Logistic regression of resolved_yes on log(p/(1-p)); prices clipped
+        to [0.01, 0.99]; unpenalised MLE via <code>LogisticRegression(C=1e9)</code>. Slope = 1.0 is perfect
+        calibration; &gt; 1.0 is underconfident; &lt; 1.0 is overconfident. Slope is reported as null when
+        minority-class share &lt; 5% because the MLE diverges (near-separation).
+      </p>
+      <p>
+        <strong>Bootstrap CIs:</strong> 500 resamples, market-level, seed=42. CIs assume market-level
+        independence and may understate uncertainty due to correlated event structure.
+      </p>
+      <p>
+        <strong>Category source:</strong> Market tags via <code>/markets?include_tag=true</code>
+        (not the <code>category</code> field, which is null on ~83% of markets).
+      </p>
+      <p>
+        <strong>Dynamics:</strong> Relative-time normalisation standardises chronology, not information arrival.
+        Late-snapshot (90%+) log-odds slopes may diverge due to near-separation as winners and losers pull apart;
+        BSS is the more reliable dynamics signal at those time points.
+      </p>
+      <p>
+        <strong>Limitations:</strong> Market prices are not IID forecasts from a stable process. Aggregate
+        calibration curves are mixtures of heterogeneous mechanisms. Final prices may partly reflect
+        resolution certainty rather than forecasting quality. Observed pricing patterns are <em>consistent
+        with</em> reported interpretations but do not prove specific behavioral mechanisms.
+      </p>
+    </details>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>
+      Built with <a href="https://observablehq.com/plot/" target="_blank">Observable Plot</a>,
+      <a href="https://github.com/russellsamora/scrollama" target="_blank">Scrollama</a>, and
+      <a href="https://d3js.org" target="_blank">D3</a>.
+      Data from <a href="https://polymarket.com" target="_blank">Polymarket</a> APIs.
+    </p>
+    <p style="margin-top:8px;">
+      Calibration methodology follows
+      Murphy (1973), Page &amp; Clemen (2013), Le (2026), and Reichenbach &amp; Walther (2025).
+    </p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
+<script src="https://unpkg.com/scrollama@3.2.0/scrollama.min.js"></script>
+
+<script>
+(async function() {
+  const dataBase = (document.location.pathname.endsWith("/") ? "" : "") + "data/";
+
+  const [calibrationData, categoryData, dynamicsData, dynamicsCategoryData,
+         hallOfShame, hiddenGems, longshotData, longshotVolume] = await Promise.all([
+    d3.json(dataBase + "calibration_data.json"),
+    d3.json(dataBase + "category_data.json"),
+    d3.json(dataBase + "dynamics_data.json"),
+    d3.json(dataBase + "dynamics_category.json"),
+    d3.json(dataBase + "hall_of_shame.json"),
+    d3.json(dataBase + "hidden_gems.json"),
+    d3.json(dataBase + "longshot_data.json"),
+    d3.json(dataBase + "longshot_volume.json"),
+  ]);
+
+  // ── Hero stats ──
+  const heroEl = document.getElementById("hero-stats");
+  heroEl.innerHTML = `
+    <div class="hero-stat">
+      <span class="value">${calibrationData.n_markets}</span>
+      <span class="label">Markets Analyzed</span>
+    </div>
+    <div class="hero-stat">
+      <span class="value">${(calibrationData.bss * 100).toFixed(0)}%</span>
+      <span class="label">Brier Skill Score</span>
+    </div>
+    <div class="hero-stat">
+      <span class="value">${dynamicsData.dynamics_sample.n_markets}</span>
+      <span class="label">Dynamics Sample</span>
+    </div>
+  `;
+
+  // ── Helpers ──
+  const COLORS = {
+    "Politics": "#bc8cff",
+    "Sports": "#d29922",
+    "Crypto": "#3fb950",
+    "Other": "#8b949e",
+    "Pop Culture": "#f778ba",
+    "Business": "#58a6ff",
+    "Science": "#79c0ff",
+    "All": "#58a6ff",
+  };
+
+  function bucketsToPoints(buckets, minN = 5) {
+    return buckets
+      .filter(b => b.n >= minN && b.mean_predicted != null && b.mean_actual != null)
+      .map(b => ({
+        predicted: b.mean_predicted,
+        actual: b.mean_actual,
+        n: b.n,
+        binCenter: b.bin_center,
+      }));
+  }
+
+  function makeCalibrationPlot(points, {width = 500, height = 420, color = "var(--accent)", label = "", showN = true} = {}) {
+    const maxR = 8, minR = 3;
+    const maxN = d3.max(points, d => d.n) || 1;
+    const rScale = d => minR + (maxR - minR) * Math.sqrt(d.n / maxN);
+
+    return Plot.plot({
+      width,
+      height,
+      style: {
+        background: "transparent",
+        color: "var(--text-muted)",
+        fontSize: "12px",
+      },
+      x: {
+        label: "Predicted probability",
+        domain: [0, 1],
+        ticks: [0, 0.25, 0.5, 0.75, 1],
+        tickFormat: ".0%",
+      },
+      y: {
+        label: "Observed outcome rate",
+        domain: [0, 1],
+        ticks: [0, 0.25, 0.5, 0.75, 1],
+        tickFormat: ".0%",
+      },
+      marks: [
+        Plot.line([[0, 0], [1, 1]], {
+          stroke: "var(--diagonal)",
+          strokeWidth: 1,
+          strokeDasharray: "6,4",
+        }),
+        Plot.dot(points, {
+          x: "predicted",
+          y: "actual",
+          r: d => rScale(d),
+          fill: color,
+          fillOpacity: 0.7,
+          stroke: color,
+          strokeWidth: 1,
+          tip: true,
+          title: d => `Predicted: ${(d.predicted * 100).toFixed(1)}%\nActual: ${(d.actual * 100).toFixed(1)}%\nn = ${d.n}`,
+        }),
+        Plot.line(points.sort((a, b) => a.predicted - b.predicted), {
+          x: "predicted",
+          y: "actual",
+          stroke: color,
+          strokeWidth: 2,
+          strokeOpacity: 0.5,
+          curve: "catmull-rom",
+        }),
+      ],
+    });
+  }
+
+  // ── Section 1: Timeline chart ──
+  const gaetzMarket = hallOfShame.markets[0];
+  const timelineSteps = [
+    {pct: 0, price: 0.034, label: "Open"},
+    {pct: 0.10, price: 0.03},
+    {pct: 0.25, price: 0.04},
+    {pct: 0.50, price: 0.035},
+    {pct: 0.75, price: 0.03},
+    {pct: 0.90, price: 0.04},
+    {pct: 0.95, price: 0.034},
+    {pct: 1.0, price: 0.034, label: "Final price"},
+  ];
+
+  let timelineVisiblePct = 1.0;
+  let timelineShowResolution = false;
+
+  function renderTimeline() {
+    const el = document.getElementById("timeline-chart");
+    el.innerHTML = "";
+    const w = el.clientWidth || 480;
+    const h = 320;
+    const visibleData = timelineSteps.filter(d => d.pct <= timelineVisiblePct);
+
+    const marks = [
+      Plot.ruleY([0], {stroke: "var(--border)"}),
+      Plot.line(visibleData, {
+        x: "pct",
+        y: "price",
+        stroke: "var(--accent)",
+        strokeWidth: 2.5,
+        curve: "catmull-rom",
+      }),
+      Plot.dot(visibleData, {
+        x: "pct",
+        y: "price",
+        fill: "var(--accent)",
+        r: 4,
+        tip: true,
+        title: d => `${(d.pct * 100).toFixed(0)}% of lifetime\nPrice: ${(d.price * 100).toFixed(1)}%`,
+      }),
+    ];
+
+    if (timelineShowResolution) {
+      marks.push(
+        Plot.ruleY([1], {stroke: "var(--green)", strokeWidth: 2, strokeDasharray: "4,4"}),
+        Plot.text([{x: 0.5, y: 1}], {
+          x: "x", y: "y", text: d => "Resolved YES",
+          fill: "var(--green)", fontSize: 13, fontWeight: 700, dy: -14,
+        }),
+        Plot.areaY(visibleData, {
+          x: "pct", y1: "price", y2: d => 1,
+          fill: "var(--red)", fillOpacity: 0.08, curve: "catmull-rom",
+        }),
+        Plot.text([{x: 0.5, y: 0.5}], {
+          x: "x", y: "y",
+          text: d => "Forecast error",
+          fill: "var(--red)", fillOpacity: 0.5, fontSize: 12, fontStyle: "italic",
+        })
+      );
+    }
+
+    const plot = Plot.plot({
+      width: w,
+      height: h,
+      style: { background: "transparent", color: "var(--text-muted)", fontSize: "12px" },
+      x: {
+        label: "% of market lifetime elapsed",
+        domain: [0, 1],
+        ticks: [0, 0.25, 0.5, 0.75, 1],
+        tickFormat: d => (d * 100) + "%",
+      },
+      y: {
+        label: "YES probability",
+        domain: [0, timelineShowResolution ? 1.1 : 0.2],
+        tickFormat: ".0%",
+      },
+      marks,
+    });
+    el.appendChild(plot);
+  }
+
+  // ── Section 2: Calibration chart ──
+  const snapshotKeys = ["0.10", "0.25", "0.50", "0.75", "0.90", "0.95"];
+  const snapshotLabels = {"0.10": "10%", "0.25": "25%", "0.50": "50%", "0.75": "75%", "0.90": "90%", "0.95": "95%"};
+
+  let currentCalStep = "cal-overall";
+
+  function renderCalibration(step) {
+    currentCalStep = step;
+    const el = document.getElementById("calibration-chart");
+    el.innerHTML = "";
+    const w = el.clientWidth || 480;
+    const titleEl = document.getElementById("cal-title");
+    const subEl = document.getElementById("cal-subtitle");
+
+    let points, color, plotEl;
+
+    if (step === "cal-overall") {
+      titleEl.textContent = "Overall Calibration";
+      subEl.textContent = `${calibrationData.n_markets} markets \u00b7 BSS ${(calibrationData.bss * 100).toFixed(0)}%`;
+      points = bucketsToPoints(calibrationData.buckets);
+      plotEl = makeCalibrationPlot(points, {width: w, color: "var(--accent)"});
+
+    } else if (step === "cal-early") {
+      const snap = dynamicsData.snapshots["0.10"];
+      titleEl.textContent = "Early Market Life (10% elapsed)";
+      subEl.textContent = `${snap.n_markets} markets \u00b7 BSS ${(snap.bss * 100).toFixed(0)}%`;
+      points = bucketsToPoints(snap.calibration_buckets);
+      plotEl = makeCalibrationPlot(points, {width: w, color: "#d29922"});
+
+    } else if (step === "cal-mid") {
+      const snap = dynamicsData.snapshots["0.50"];
+      titleEl.textContent = "Mid-Life (50% elapsed)";
+      subEl.textContent = `${snap.n_markets} markets \u00b7 BSS ${(snap.bss * 100).toFixed(0)}%`;
+      points = bucketsToPoints(snap.calibration_buckets);
+      plotEl = makeCalibrationPlot(points, {width: w, color: "#bc8cff"});
+
+    } else if (step === "cal-late") {
+      const snap = dynamicsData.snapshots["0.90"];
+      titleEl.textContent = "Near Resolution (90% elapsed)";
+      subEl.textContent = `${snap.n_markets} markets \u00b7 BSS ${(snap.bss * 100).toFixed(0)}%`;
+      points = bucketsToPoints(snap.calibration_buckets);
+      plotEl = makeCalibrationPlot(points, {width: w, color: "#3fb950"});
+
+    } else if (step === "cal-final") {
+      const snap = dynamicsData.final_price_sanity_check;
+      titleEl.textContent = "Final Trading Prices";
+      subEl.textContent = `${snap.n_markets} markets \u00b7 BSS ${(snap.bss * 100).toFixed(0)}%`;
+      points = bucketsToPoints(snap.calibration_buckets);
+      plotEl = makeCalibrationPlot(points, {width: w, color: "#58a6ff"});
+
+    } else if (step === "cal-category") {
+      titleEl.textContent = "Calibration by Category";
+      subEl.textContent = "Showing categories with \u226530 markets";
+
+      const allPoints = [];
+      for (const [cat, info] of Object.entries(categoryData.categories)) {
+        if (info.n_markets < 30) continue;
+        const pts = bucketsToPoints(info.buckets, 3).map(p => ({...p, category: cat}));
+        allPoints.push(...pts);
+      }
+
+      plotEl = Plot.plot({
+        width: w,
+        height: 420,
+        style: { background: "transparent", color: "var(--text-muted)", fontSize: "12px" },
+        color: {
+          domain: Object.keys(COLORS),
+          range: Object.values(COLORS),
+          legend: true,
+        },
+        x: {
+          label: "Predicted probability",
+          domain: [0, 1],
+          ticks: [0, 0.25, 0.5, 0.75, 1],
+          tickFormat: ".0%",
+        },
+        y: {
+          label: "Observed outcome rate",
+          domain: [0, 1],
+          ticks: [0, 0.25, 0.5, 0.75, 1],
+          tickFormat: ".0%",
+        },
+        marks: [
+          Plot.line([[0, 0], [1, 1]], {
+            stroke: "var(--diagonal)",
+            strokeWidth: 1,
+            strokeDasharray: "6,4",
+          }),
+          ...["Politics", "Sports", "Crypto", "Other"].map(cat => {
+            const catPts = allPoints.filter(d => d.category === cat).sort((a,b) => a.predicted - b.predicted);
+            return catPts.length > 1 ? Plot.line(catPts, {
+              x: "predicted", y: "actual",
+              stroke: COLORS[cat],
+              strokeWidth: 2,
+              strokeOpacity: 0.6,
+              curve: "catmull-rom",
+            }) : null;
+          }).filter(Boolean),
+          Plot.dot(allPoints, {
+            x: "predicted",
+            y: "actual",
+            fill: d => COLORS[d.category],
+            r: 4,
+            fillOpacity: 0.7,
+            tip: true,
+            title: d => `${d.category}\nPredicted: ${(d.predicted*100).toFixed(1)}%\nActual: ${(d.actual*100).toFixed(1)}%\nn=${d.n}`,
+          }),
+        ],
+      });
+    }
+
+    el.appendChild(plotEl);
+  }
+
+  // ── BSS Dynamics line chart ──
+  const dynamicsCategories = Object.keys(dynamicsCategoryData.categories);
+  let activeDynCats = new Set(["All", ...dynamicsCategories]);
+
+  function buildDynamicsData() {
+    const rows = [];
+    for (const pctKey of snapshotKeys) {
+      const snap = dynamicsData.snapshots[pctKey];
+      if (snap) {
+        rows.push({
+          pct: parseFloat(pctKey),
+          pctLabel: snapshotLabels[pctKey],
+          bss: snap.bss,
+          category: "All",
+        });
+      }
+    }
+    for (const [cat, info] of Object.entries(dynamicsCategoryData.categories)) {
+      for (const pctKey of snapshotKeys) {
+        const snap = info.snapshots[pctKey];
+        if (snap) {
+          rows.push({
+            pct: parseFloat(pctKey),
+            pctLabel: snapshotLabels[pctKey],
+            bss: snap.bss,
+            category: cat,
+          });
+        }
+      }
+    }
+    return rows;
+  }
+
+  function renderDynamicsChart() {
+    const el = document.getElementById("dynamics-line-chart");
+    el.innerHTML = "";
+    const w = el.clientWidth || 880;
+    const allRows = buildDynamicsData();
+    const filtered = allRows.filter(d => activeDynCats.has(d.category));
+
+    const plot = Plot.plot({
+      width: w,
+      height: 400,
+      style: { background: "transparent", color: "var(--text-muted)", fontSize: "12px" },
+      x: {
+        label: "% of market lifetime elapsed",
+        tickFormat: d => (d * 100) + "%",
+        ticks: [0.1, 0.25, 0.5, 0.75, 0.9, 0.95],
+      },
+      y: {
+        label: "Brier Skill Score",
+        domain: [0, 1],
+        tickFormat: ".0%",
+      },
+      color: {
+        domain: ["All", ...dynamicsCategories],
+        range: ["All", ...dynamicsCategories].map(c => COLORS[c] || "#8b949e"),
+        legend: true,
+      },
+      marks: [
+        Plot.ruleY([0], {stroke: "var(--border)"}),
+        Plot.line(filtered, {
+          x: "pct",
+          y: "bss",
+          stroke: "category",
+          strokeWidth: d => d.category === "All" ? 3 : 2,
+          strokeOpacity: d => d.category === "All" ? 1 : 0.7,
+          curve: "catmull-rom",
+        }),
+        Plot.dot(filtered, {
+          x: "pct",
+          y: "bss",
+          fill: "category",
+          r: 5,
+          tip: true,
+          title: d => `${d.category}\n${d.pctLabel} elapsed\nBSS: ${(d.bss * 100).toFixed(1)}%`,
+        }),
+      ],
+    });
+    el.appendChild(plot);
+  }
+
+  function renderDynamicsToggles() {
+    const el = document.getElementById("dynamics-toggles");
+    const cats = ["All", ...dynamicsCategories];
+    el.innerHTML = cats.map(c =>
+      `<button class="cat-btn ${activeDynCats.has(c) ? 'active' : ''}" data-cat="${c}">${c}</button>`
+    ).join("");
+    el.querySelectorAll(".cat-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const cat = btn.dataset.cat;
+        if (activeDynCats.has(cat)) activeDynCats.delete(cat);
+        else activeDynCats.add(cat);
+        renderDynamicsToggles();
+        renderDynamicsChart();
+      });
+    });
+  }
+
+  // ── Section 3: Surprise cards ──
+  function formatVolume(v) {
+    if (v >= 1e6) return "$" + (v / 1e6).toFixed(1) + "M";
+    if (v >= 1e3) return "$" + (v / 1e3).toFixed(0) + "k";
+    return "$" + v.toFixed(0);
+  }
+
+  function renderSurpriseCards() {
+    const el = document.getElementById("surprise-cards");
+    const markets = hallOfShame.markets.slice(0, 16);
+    el.innerHTML = markets.map(m => {
+      const isYes = m.resolved_yes === 1;
+      const surprise = Math.abs(m.final_yes_price - m.resolved_yes);
+      const priceClass = isYes ? (m.final_yes_price < 0.5 ? "no" : "yes") : (m.final_yes_price > 0.5 ? "yes" : "no");
+      return `
+        <div class="market-card">
+          <div class="card-category">${m.category}</div>
+          <div class="card-question">${m.question}</div>
+          <div class="card-stats">
+            <div>
+              <span class="card-price ${priceClass}">${(m.final_yes_price * 100).toFixed(1)}%</span>
+              <span style="color:var(--text-dim);font-size:0.75rem;"> predicted</span>
+            </div>
+            <span class="card-outcome ${isYes ? 'resolved-yes' : 'resolved-no'}">
+              ${isYes ? 'YES' : 'NO'}
+            </span>
+          </div>
+          <div style="margin-top:8px;font-size:0.75rem;color:var(--text-dim);">
+            ${formatVolume(m.volume)} volume &middot; ${(surprise * 100).toFixed(0)}pp miss
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  // ── Initialize everything ──
+  renderTimeline();
+  renderCalibration("cal-overall");
+  renderDynamicsToggles();
+  renderDynamicsChart();
+  renderSurpriseCards();
+
+  // ── Scrollama: Timeline ──
+  const scrollerTimeline = scrollama();
+  scrollerTimeline.setup({
+    step: "#scrolly-timeline .scrolly__step",
+    offset: 0.5,
+  }).onStepEnter(({element}) => {
+    document.querySelectorAll("#scrolly-timeline .scrolly__step").forEach(s => s.classList.remove("is-active"));
+    element.classList.add("is-active");
+    const step = element.dataset.step;
+    if (step === "tl-open") {
+      timelineVisiblePct = 0.01;
+      timelineShowResolution = false;
+    } else if (step === "tl-mid") {
+      timelineVisiblePct = 0.75;
+      timelineShowResolution = false;
+    } else if (step === "tl-resolve") {
+      timelineVisiblePct = 1.0;
+      timelineShowResolution = true;
+    } else if (step === "tl-question") {
+      timelineVisiblePct = 1.0;
+      timelineShowResolution = true;
+    }
+    renderTimeline();
+  });
+
+  // ── Scrollama: Calibration ──
+  const scrollerCalibration = scrollama();
+  scrollerCalibration.setup({
+    step: "#scrolly-calibration .scrolly__step",
+    offset: 0.5,
+  }).onStepEnter(({element}) => {
+    document.querySelectorAll("#scrolly-calibration .scrolly__step").forEach(s => s.classList.remove("is-active"));
+    element.classList.add("is-active");
+    renderCalibration(element.dataset.step);
+  });
+
+  // ── Resize handler ──
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      renderTimeline();
+      renderCalibration(currentCalStep);
+      renderDynamicsChart();
+    }, 200);
+  });
+})();
+</script>
+</body>
+</html>
