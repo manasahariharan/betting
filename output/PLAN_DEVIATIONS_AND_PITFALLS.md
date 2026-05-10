@@ -110,3 +110,67 @@ Even with tag-based categorization, ~23% of $10k+ markets don't match any tag ru
 4. **Save raw CLOB responses to disk** after each fetch (plan recommends this for Analysis 3) to avoid re-fetching on re-runs
 5. **Pre-filter by date** if CLOB data is needed — markets before ~2023 won't have any
 6. **Test API parameters** before relying on them — several documented parameters don't work as expected
+
+---
+
+## Analysis 2 (Longshot Bias) findings & pitfalls
+
+### 14. Reuse Analysis 1's CSV — do not re-hit the API
+
+`data/markets_clean.csv` already contains the stratified sample with
+`final_yes_price` (CLOB second-to-last 12hr tick) and `resolved_yes`.
+Analysis 2 reads it directly and makes zero new HTTP calls. This sidesteps
+every API pitfall above.
+
+### 15. `sklearn.linear_model.LogisticRegression(penalty=None)` is deprecated in 1.8
+
+The plan's pseudocode `LogisticRegression().fit(...)` uses the default
+L2 penalty, which **shrinks the slope toward zero** — exactly what we
+do not want when reporting calibration slope. The right move is
+`LogisticRegression(C=1e9, solver="lbfgs", max_iter=5000)` — equivalent
+unpenalised MLE without the deprecated `penalty=None` argument. Suppress
+`FutureWarning` and `ConvergenceWarning` from sklearn so the run log
+isn't drowned by ~15,000 warning lines from the bootstrap loop.
+
+### 16. Logistic MLE diverges on near-separated subsets
+
+Both tails are extremely separated:
+
+- Longshots (price ≤ 0.15): only 3/420 resolved YES (≈0.7%)
+- Favorites (price ≥ 0.85): 93/94 resolved YES (≈99%)
+
+Fitting an unpenalised logistic regression on either subset produces a
+slope of 200+ and a meaningless intercept of -450. **Detect minority-class
+share < 5% before fitting** and return `slope: null` with an explicit
+`warning` field. Report `mean_overpricing_pp` instead — it remains
+well-defined and is what the plan recommends as the plain-English summary.
+
+### 17. Per-category longshot subsets are all near-separated
+
+In our 806-market sample, *every* category's longshot subset has minority
+class < 5% (most have 0 YES events). Per-category longshot slopes are
+therefore unfittable. The plan anticipated this in its failure-mode
+table; the right output is per-category overpricing pp plus a fallback
+"full-category" slope as context.
+
+### 18. Bootstrap CIs blow up on small subsets
+
+For categories with n < 60, the bootstrap can resample into degenerate
+cases where the slope estimate flies to ±100. Add a `ci_wide: true` flag
+when `slope_ci_upper - slope_ci_lower > 2.0`. Downstream visualisation
+should fade or warn on these.
+
+### 19. Hidden gems are essentially absent
+
+Only **1 market in our 806-sample** was priced ≤ 0.10 and resolved YES
+(the Matt Gaetz Congressman exit). The plan's "top 15" target is
+unachievable; report this as a finding rather than padding the list.
+
+### 20. Bootstrap independence assumption is dubious for correlated markets
+
+Many Polymarket events spawn multiple markets (e.g. Senate races,
+multiple election outcomes for the same race). The plan flags this
+(pitfall #5 in "Future Improvements"). We compute a **category-stratified
+bootstrap** on the full sample as a robustness check and document the
+limitation in the JSON `methodology.bootstrap` field. Findings are
+qualitatively unchanged between regular and stratified bootstrap.

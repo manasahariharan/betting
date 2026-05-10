@@ -1,0 +1,18 @@
+{
+  "generated": "2026-05-10T08:02:30.127911+00:00",
+  "description": "Top 15 markets priced <= 0.1 that resolved YES. Sorted ascending by final price (most surprising first).",
+  "n_eligible": 1,
+  "markets": [
+    {
+      "market_id": "507545",
+      "question": "Matt Gaetz out as Congressman in 2024?",
+      "slug": "matt-gaetz-out-as-congressman-in-2024",
+      "url": "https://polymarket.com/event/matt-gaetz-out-as-congressman-in-2024",
+      "category": "Politics",
+      "volume": 234865.82,
+      "final_yes_price": 0.034,
+      "resolved_yes": 1,
+      "end_date": "2024-12-31T12:00:00Z"
+    }
+  ]
+}
