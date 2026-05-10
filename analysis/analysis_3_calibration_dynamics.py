@@ -326,18 +326,22 @@ def calibration_buckets(prices, outcomes, width=BIN_WIDTH):
     return out
 
 
-def snapshot_metrics(snap_df, snap_col, label):
+def snapshot_metrics(snap_df, snap_col, label, min_n=30):
     """
     Compute the full calibration stack at a single snapshot column.
-    Returns a dict (or None if too few markets).
+    `min_n` is the minimum number of markets with a non-null snapshot
+    price required to fit any metrics (default 30 for the full-sample
+    pass; per-category breakouts use 20 to match the plan's category
+    threshold).
     """
     sub = snap_df.dropna(subset=[snap_col]).copy()
     n = len(sub)
-    if n < 30:
+    if n < min_n:
         return {
             "label": label,
             "n_markets": n,
-            "skipped": f"n < 30 markets with a price at this snapshot",
+            "skipped": (f"n < {min_n} markets with a price at this "
+                        "snapshot"),
         }
 
     pred = sub[snap_col].values.astype(float)
@@ -425,7 +429,8 @@ def per_category_dynamics(snap_df):
         for pct in SNAPSHOT_PCTS:
             col = f"snap_{int(pct*100):02d}"
             cat_snapshots[f"{pct:.2f}"] = snapshot_metrics(
-                cat_df, col, f"{cat}_pct_{int(pct*100):02d}"
+                cat_df, col, f"{cat}_pct_{int(pct*100):02d}",
+                min_n=MIN_CATEGORY_N,
             )
         out[cat] = {
             "n_markets_in_dynamics_sample": int(len(cat_df)),

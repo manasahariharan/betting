@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-10T08:29:48.903907+00:00",
+  "generated": "2026-05-10T08:32:18.192204+00:00",
   "source": "Analysis 1 stratified sample (data/markets_clean.csv) + CLOB price history fetched per market and cached to data/raw_history/{market_id}.json",
   "methodology": {
     "snapshot_pcts": [
