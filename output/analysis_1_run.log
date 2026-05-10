@@ -1,0 +1,111 @@
+
+██████████████████████████████████████████████████████████████████████
+  ANALYSIS 1: MAIN CALIBRATION
+██████████████████████████████████████████████████████████████████████
+  Started: 2026-05-10T07:39:19.985520+00:00
+======================================================================
+STEP 1: Fetching markets (target ~10000, vol >= $10,000)
+======================================================================
+  Page 1 (offset=0, qualifying: 0, scanned: 0)...
+  Page 21 (offset=2000, qualifying: 907, scanned: 2000)...
+  Page 41 (offset=4000, qualifying: 1560, scanned: 4000)...
+  Page 61 (offset=6000, qualifying: 1967, scanned: 6000)...
+  Page 81 (offset=8000, qualifying: 2312, scanned: 8000)...
+  Page 101 (offset=10000, qualifying: 3482, scanned: 10000)...
+  Page 121 (offset=12000, qualifying: 4799, scanned: 12000)...
+  Page 141 (offset=14000, qualifying: 5890, scanned: 14000)...
+  Page 161 (offset=16000, qualifying: 7322, scanned: 16000)...
+  Page 181 (offset=18000, qualifying: 8689, scanned: 18000)...
+
+  Raw markets scanned: 19900
+  Qualifying (binary, resolved, vol >= $10,000): 10016
+
+  Category distribution:
+    Politics            :  3887 (38.8%)
+    Sports              :  2534 (25.3%)
+    Other               :  2321 (23.2%)
+    Crypto              :   574 (5.7%)
+    Pop Culture         :   299 (3.0%)
+    Business            :   271 (2.7%)
+    Science             :   130 (1.3%)
+
+======================================================================
+STEP 2: Stratified sample (n=1000)
+======================================================================
+  Sample size: 1000
+    Politics            :  388
+    Sports              :  253
+    Other               :  232
+    Crypto              :   57
+    Pop Culture         :   30
+    Business            :   27
+    Science             :   13
+
+  Merging into 'Other' for category analysis: ['Science']
+
+======================================================================
+STEP 3: Fetching CLOB price history (1000 markets)
+======================================================================
+  With YES token IDs: 999/1000
+  Progress: 100/999 (100 ok, 0 no data)
+  Progress: 200/999 (198 ok, 2 no data)
+  Progress: 300/999 (297 ok, 3 no data)
+  Progress: 400/999 (394 ok, 6 no data)
+  Progress: 500/999 (494 ok, 6 no data)
+  Progress: 600/999 (594 ok, 6 no data)
+  Progress: 700/999 (645 ok, 55 no data)
+  Progress: 800/999 (663 ok, 137 no data)
+  Progress: 900/999 (708 ok, 192 no data)
+
+  Done: 806 prices, 193 failed
+  Markets with CLOB prices: 806/1000
+
+======================================================================
+STEP 4: Calibration analysis
+======================================================================
+  Markets with CLOB prices: 806
+  N=806  YES=244  NO=562  base_rate=0.3027
+  Brier=0.080020  BSS=0.620911
+
+         Bin      Pred    Actual      N
+  ------------------------------------
+  0.00-0.05    0.0071    0.0028    360
+  0.05-0.10    0.0704    0.0000     30
+  0.10-0.15    0.1261    0.0667     30
+  0.15-0.20    0.1726    0.1177     17
+  0.20-0.25    0.2283    0.2308     13
+  0.25-0.30    0.2755    0.3044     23
+  0.30-0.35    0.3250    0.2353     17
+  0.35-0.40    0.3760    0.3333     21
+  0.40-0.45    0.4243    0.3333     24
+  0.45-0.50    0.4740    0.6471     17
+  0.50-0.55    0.5097    0.5435     46
+  0.55-0.60    0.5720    0.4783     23
+  0.60-0.65    0.6271    0.7059     17
+  0.65-0.70    0.6720    0.8333     18
+  0.70-0.75    0.7193    0.6429     14
+  0.75-0.80    0.7696    0.7037     27
+  0.80-0.85    0.8301    1.0000     15
+  0.85-0.90    0.8781    0.9091     11
+  0.90-0.95    0.9277    1.0000     18
+  0.95-1.00    0.9871    1.0000     65
+
+======================================================================
+STEP 5: By-category calibration
+======================================================================
+  Business            : n=  27 — SKIPPED (< 30)
+  Crypto              : n=  57  BSS=0.8432  base_rate=0.298
+  Other               : n=  58  BSS=0.6476  base_rate=0.414
+  Politics            : n= 382  BSS=0.6671  base_rate=0.314
+  Pop Culture         : n=  29 — SKIPPED (< 30)
+  Sports              : n= 253  BSS=0.4817  base_rate=0.289
+
+======================================================================
+STEP 6: Saving outputs
+======================================================================
+  /workspace/data/markets_clean.csv (307.6 KB)
+  /workspace/output/calibration_data.json (4.4 KB)
+  /workspace/output/category_data.json (16.4 KB)
+
+  Completed: 2026-05-10T07:47:48.907346+00:00 (509s)
+██████████████████████████████████████████████████████████████████████
