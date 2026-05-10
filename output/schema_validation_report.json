@@ -1,0 +1,59 @@
+{
+  "total_fetched": 200,
+  "fields_checked": [
+    "id",
+    "question",
+    "slug",
+    "conditionId",
+    "endDate",
+    "volume",
+    "liquidity",
+    "outcomes",
+    "outcomePrices",
+    "closed"
+  ],
+  "missing_fields": {
+    "240379": [
+      "liquidity"
+    ],
+    "240380": [
+      "liquidity"
+    ],
+    "240382": [
+      "liquidity"
+    ],
+    "240383": [
+      "liquidity"
+    ],
+    "240384": [
+      "liquidity"
+    ],
+    "240385": [
+      "liquidity"
+    ],
+    "240613": [
+      "liquidity"
+    ],
+    "240637": [
+      "liquidity"
+    ],
+    "240639": [
+      "liquidity"
+    ],
+    "240642": [
+      "liquidity"
+    ],
+    "246667": [
+      "liquidity"
+    ],
+    "248211": [
+      "liquidity"
+    ],
+    "248212": [
+      "liquidity"
+    ]
+  },
+  "type_issues": [],
+  "cleaned_count": 200,
+  "dropped_reasons": {}
+}

@@ -1,0 +1,20 @@
+{
+  "total_markets": 200,
+  "binary_markets": 50,
+  "resolved_yes_count": 13,
+  "resolved_no_count": 37,
+  "base_rate_yes": 0.065,
+  "median_volume": 6368.7388215,
+  "mean_volume": 153496.7550749302,
+  "median_duration_days": 19.16382579861111,
+  "category_counts": {
+    "sports": 64,
+    "other": 60,
+    "politics": 50,
+    "crypto": 11,
+    "tech/ai": 8,
+    "economics": 7
+  },
+  "date_range_start": "2022-01-11 02:13:47.363000+00:00",
+  "date_range_end": "2024-11-08 12:00:00+00:00"
+}

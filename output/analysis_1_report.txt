@@ -1,0 +1,70 @@
+======================================================================
+ANALYSIS 1 REPORT: What Are Prediction Markets Actually Predicting?
+======================================================================
+Generated: 2026-05-10T06:02:40.035778+00:00
+
+──────────────────────────────────────────────────────────────────────
+DATA COLLECTION SUMMARY
+──────────────────────────────────────────────────────────────────────
+  Total markets fetched: 200
+  Binary markets with outcomes: 50
+  Resolved YES: 13
+  Resolved NO: 37
+  Base rate (YES): 0.065
+  Date range: 2022-01-11 02:13:47.363000+00:00 to 2024-11-08 12:00:00+00:00
+  Median volume: $6,368.74
+  Median duration: 19.2 days
+
+──────────────────────────────────────────────────────────────────────
+CATEGORY DISTRIBUTION
+──────────────────────────────────────────────────────────────────────
+  sports              :   64
+  other               :   60
+  politics            :   50
+  crypto              :   11
+  tech/ai             :    8
+  economics           :    7
+
+──────────────────────────────────────────────────────────────────────
+PRICE HISTORY SAMPLING
+──────────────────────────────────────────────────────────────────────
+  Markets sampled for price history: 13
+  Total price points collected: 5884
+
+──────────────────────────────────────────────────────────────────────
+CALIBRATION PREVIEW
+──────────────────────────────────────────────────────────────────────
+  Brier Score: 0.0000
+  Markets in calibration: 50
+  NOTE: Final prices may reflect resolution certainty (see plan caveats).
+  A full dynamics-based calibration analysis is needed for Section 2.
+
+──────────────────────────────────────────────────────────────────────
+STATISTICAL CAVEATS (from Validation Plan)
+──────────────────────────────────────────────────────────────────────
+  1. Market prices are NOT IID forecasts
+  2. Final prices may reflect resolution certainty, not forecast quality
+  3. Relative-time normalization standardizes chronology, not information
+  4. Longshot-bias interpretation is fragile in prediction markets
+  5. Bootstrap CIs assume market-level independence
+  6. Representative sampling weights by market count, not economic importance
+
+──────────────────────────────────────────────────────────────────────
+OUTPUT FILES GENERATED
+──────────────────────────────────────────────────────────────────────
+  markets_cleaned.csv                             103.7 KB
+  price_histories_sample.json                     349.3 KB
+  analysis_1_report.txt                             4.6 KB
+  calibration_preview.csv                         81 bytes
+  calibration_preview.png                          73.8 KB
+  category_distribution.png                        55.4 KB
+  market_summary_statistics.json                 490 bytes
+  market_timelines.png                            421.7 KB
+  market_timelines_overlay.png                    241.0 KB
+  run_log.txt                                      0 bytes
+  schema_validation_report.json                  835 bytes
+  sharpness_distribution.png                       48.4 KB
+
+======================================================================
+END OF REPORT
+======================================================================
