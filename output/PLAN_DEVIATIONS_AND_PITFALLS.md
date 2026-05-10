@@ -174,3 +174,107 @@ multiple election outcomes for the same race). The plan flags this
 bootstrap** on the full sample as a robustness check and document the
 limitation in the JSON `methodology.bootstrap` field. Findings are
 qualitatively unchanged between regular and stratified bootstrap.
+
+---
+
+## Analysis 3 (Calibration Dynamics) findings & pitfalls
+
+### 21. Reuse Analysis 2's calibration helpers
+
+Both deep dives need the same statistical machinery (log-odds slope,
+bootstrap CIs, near-separation guard, `ci_wide` flag, unpenalised MLE
+via `C=1e9`). The cleanest pattern is to import them once from
+`analysis_2_longshot_bias.py` rather than maintain two copies. This
+also means an A2-branch fix automatically helps A3.
+
+### 22. `yes_token_id` is a 77-digit integer — read as string, never as float
+
+The CSV column looks like
+`56996626423612221170851800107812812093281585719288720435408011284737463763133`.
+`pd.read_csv` parses it as `float64` by default, which only carries
+~15 decimal digits of precision. Coercing back via `int(float(x))` then
+`str(...)` silently produces a *different* token ID. The CLOB API
+happily returns `{"history": []}` for the wrong token — no error, no
+warning. This was the most painful bug in the chain because there is no
+visible failure signal.
+
+**Fix:** read with `dtype={"yes_token_id": str}` and never coerce
+through `float()`. Same applies to any other long ID columns.
+
+### 23. pandas 3.0 datetime → unix-seconds conversion is fragile
+
+The natural `df["dt"].astype("int64") // 10**9` works on pandas 2.x
+because datetime arrays default to `unit="ns"`. **In pandas 3.0,
+datetime arrays may use `unit="us"` or `"ms"`**, in which case the
+division silently over-divides by 10³ or 10⁶. Result: timestamps come
+out 1,000–1,000,000× smaller than they should be, and any downstream
+comparison against unix-second values fails silently.
+
+**Fix:** use the per-row `.timestamp()` accessor, which always returns
+seconds since epoch:
+
+```python
+df["open_ts"] = df["open_dt"].apply(lambda x: int(x.timestamp()))
+```
+
+Slower than vectorised int conversion, but unambiguous.
+
+### 24. Save raw CLOB responses to a per-market disk cache
+
+The plan recommended this and it pays off twice over for Analysis 3:
+the cold run is ~3 min for 628 markets at a polite 0.25s/call, but the
+warm run (cache populated) is ~12 s. The on-disk footprint is ~4 MB
+across 628 files. Add `data/raw_history/` to `.gitignore` — it's a
+cache, not a deliverable.
+
+### 25. Snapshot computation needs unix seconds, not nanoseconds
+
+When pulling the most-recent CLOB tick at or before a target time,
+`history[i]["t"]` from the API is a unix-second integer. Make sure
+`open_ts`, `close_ts`, and `target_ts` are also unix seconds, not
+nanoseconds, milliseconds, or microseconds. (This is just a corollary
+of #23.)
+
+### 26. ≥ 4 history observations filter — 18% of dynamics-eligible markets fail
+
+Even after the 5-day duration filter, 116 of 628 markets (18%) have
+fewer than 4 CLOB observations — sparse trading on otherwise-eligible
+markets. Plan anticipated this; the filter brings the dynamics sample
+to 512.
+
+### 27. Late-snapshot slopes blow up because of near-separation, not "more underconfidence"
+
+At the 90% and 95% snapshots, the slope estimate can jump dramatically
+(Crypto goes from 1.81 → 22.83 → 16.45). This is **not** evidence that
+markets become more underconfident near close. It reflects the data
+approaching perfect separation as winners and losers diverge, which
+makes the logistic MLE diverge. The bootstrap CI captures the
+instability and the `ci_wide` flag is set in the JSON.
+
+**Read late-snapshot BSS as the honest dynamics signal.** Treat the
+slope at 90%+ as a near-separation artifact and report it with the
+explicit caveat (or skip it visually in any chart that shows the slope
+trajectory).
+
+### 28. Per-snapshot BSS denominators differ slightly across snapshots
+
+Because `Var(resolved_yes)` is computed on the markets that have a
+non-null price at *that* snapshot (489 at 10%, 511 at 95%), the
+baseline shifts slightly. For the BSS *trajectory* this shouldn't
+matter much in practice, but it is a real apples-vs-apples nit.
+Documented in `methodology.bss_caveat`. A more rigorous version would
+fix the denominator to the full 512-market `Var(resolved_yes)` and
+recompute BSS at each snapshot using only that subset's prices —
+optional refinement.
+
+### 29. Sports markets gain almost no calibration accuracy over their lifetime
+
+A surprising category-level finding: BSS for Sports goes from 0.37
+(10% of life) to 0.45 (95% of life), a +0.08 gain. Politics goes from
+0.51 to 0.81, a +0.30 gain. Most sports markets resolve on a single
+discrete event (a game) where information arrives at game time, not
+gradually. The relative-time normalisation can't fix this — it
+standardises chronology, not information arrival. This is a *real
+finding*, but it reinforces the plan's pitfall #3 caveat that
+"50%-elapsed" snapshots aren't semantically comparable across
+categories.
