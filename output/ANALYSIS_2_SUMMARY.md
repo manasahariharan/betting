@@ -26,6 +26,45 @@ produced by Analysis 1 — this is the right move per the
 `PLAN_DEVIATIONS_AND_PITFALLS.md` recommendations (avoid re-fetching,
 budget for one CLOB pass).
 
+## How to read the tail counts
+
+Throughout this document you'll see things like "longshots (n = 420)"
+and "favorites (n = 94)". These are not category counts — they're
+**counts of markets in our 806-market analysis sample whose final crowd
+price fell into a particular tail of the [0, 1] range**:
+
+- **Longshot** = the crowd's final YES price was ≤ 0.15 — i.e., the
+  crowd thought the event was unlikely (≤ 15% chance of happening).
+- **Favorite** = the crowd's final YES price was ≥ 0.85 — i.e., the
+  crowd thought the event was very likely (≥ 85% chance).
+- Everything else (0.15 < price < 0.85) is the "middle".
+
+The same market is therefore classified once and only once based on
+where its price ended up. The full breakdown of our sample is:
+
+| Region | Price range | n | Share |
+|---|---|--:|--:|
+| Longshots | price ≤ 0.15 | 420 | 52% |
+| Middle    | 0.15 < price < 0.85 | 292 | 36% |
+| Favorites | price ≥ 0.85 | 94 | 12% |
+
+Two things this distribution tells us:
+
+1. **Polymarket's pricing distribution is heavily skewed toward "no,
+   this won't happen."** More than half of our sampled markets ended
+   up priced as longshots. This is mostly a function of how questions
+   are written — a market like "Will Trump win Vermont Republican
+   Primary?" looks like a favorite from one side and a longshot from
+   the other; the YES wording determines which tail a market falls in,
+   and Polymarket writes more questions where the YES side is the
+   unlikely outcome. It is not evidence that the platform's events are
+   genuinely "rare".
+2. **The favorite tail is much thinner.** Only ~94 markets land in
+   the favorite bucket, so per-bin counts in the 0.85–1.0 sub-buckets
+   are small (5–15 each). The favorite-tail finding below relies on
+   the *consistency of the direction across bins*, not on any single
+   bin's magnitude.
+
 ## Headline Numbers (full sample, n=806)
 
 | Metric | Value | 95% CI |
@@ -61,17 +100,25 @@ underconfidence reading robust to the heavy NO skew in the dataset
 | 0.10–0.15 | 0.126 | 0.067 |   30 |
 
 - **n YES = 3 / 420** (base rate ≈ 0.7%).
-- **Mean overpricing = +1.30 pp** — small. The crowd's longshots
-  resolve at roughly the rate they're priced (slightly *over*-priced if
-  anything, but the magnitude is on the order of 1pp).
+- **Mean overpricing = +1.30 pp** in aggregate, but the longshot tail
+  is *not* uniformly miscalibrated — it splits into two regimes:
+    - **Extreme longshots (price ≤ 0.05): essentially perfectly
+      calibrated.** This is 360 of the 420 longshots — predicted
+      probabilities of 0.3%–4% match realised rates of 0%–4.5% almost
+      bin-for-bin. This is the result that runs *against* the classical
+      longshot-bias literature.
+    - **Mild longshots (price 0.05–0.15): mildly overpriced.** The
+      0.10–0.15 bucket in particular is clearly overpriced (predicted
+      12.6%, actual 6.7%, n = 30). Aggregate overpricing on the
+      longshot subset is dominated by this 60-market band.
 - **No subgroup slope reported** for longshots: the minority class
   share is < 5%, so the logistic MLE diverges (the script flags this
   with a `warning` field and returns `null`).
 - Very few "hidden gems": only **1 market in the entire sample**
   priced ≤ 0.10 actually resolved YES (the Matt Gaetz Congressman exit
-  at price 0.034). This is the strongest single piece of evidence
-  *against* a classical longshot bias on Polymarket — extreme longshots
-  are not systematically over-bought.
+  at price 0.034). Combined with the bin-level result above, this is
+  consistent with extreme longshots not being systematically
+  over-bought on Polymarket.
 
 ### Favorites (price ≥ 0.85) — n=94
 
@@ -86,13 +133,23 @@ underconfidence reading robust to the heavy NO skew in the dataset
 | 0.99–1.00 | 0.996 | 1.000 | 36 |
 
 - **n YES = 93 / 94** (base rate ≈ 98.9%).
-- **Mean underpricing = -2.64 pp** — modestly *underpriced*, in
-  the favorite–longshot direction (favorites resolve YES at a slightly
-  higher rate than the crowd assigns).
-- Subgroup slope omitted for the same separation reason.
+- **Mean underpricing = -2.64 pp** — favorites resolve YES at a higher
+  rate than the crowd assigns. This is in the favorite–longshot
+  direction (heavy favorites are too cautious).
+- **The signal here is the consistency, not the magnitude.** *Every
+  single bucket from 0.90 upward resolved YES at 100%.* That is six
+  consecutive bins in which the crowd undershot the realised rate, with
+  no bucket going the other way. With only 5–36 markets per bucket, no
+  individual bin is decisive — but the unanimous direction across
+  bins is what makes the underconfidence reading credible.
+- Subgroup slope omitted for the same separation reason as longshots
+  (only 1 NO event among the 94 favorites — the MLE diverges).
 
-The asymmetry — longshots near-perfectly calibrated, favorites
-under-priced by ~2.6 pp — is what drives the full-sample slope above 1.
+**The headline "compressed-toward-50%" signal (slope = 1.35) is driven
+mainly by the favorite tail, not the longshot tail.** Longshots are
+roughly calibrated overall (with a small overpricing kink in the
+0.05–0.15 sub-band); favorites are systematically and consistently
+underpriced. The two tails do not behave symmetrically.
 
 ## By-Category (longshot subset)
 
@@ -162,9 +219,12 @@ Phrasing follows the plan's "Future Improvements" guidance —
    (slope ≈ 1.35, CI [1.18, 1.59]). This is the classic favorite–
    longshot pattern direction and is consistent with Le (2026)'s
    underconfidence finding for political markets.
-2. **The asymmetric driver is the favorite tail, not the longshot
-   tail.** Longshots are essentially well calibrated (≤1 pp
-   overpriced); favorites are ~2.6 pp underpriced.
+2. **The two tails behave asymmetrically.** Extreme longshots (price
+   ≤ 0.05, 360 markets) are essentially perfectly calibrated. Mild
+   longshots (price 0.05–0.15, 60 markets) are mildly overpriced.
+   Favorites (94 markets) are consistently underpriced by ~2.6 pp,
+   with every bucket above 0.90 resolving YES at 100%. The full-sample
+   slope > 1 is mostly the favorite tail's contribution.
 3. **Higher-volume markets are closer to calibration than lower-volume
    markets** (slope 1.23 vs 1.51; longshot overpricing 0 pp vs 3 pp).
    This is consistent with — though not proof of — the microstructure
