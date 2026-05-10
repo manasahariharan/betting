@@ -1,0 +1,68 @@
+
+██████████████████████████████████████████████████████████████████████
+  ANALYSIS 3: CALIBRATION DYNAMICS (DEEP DIVE 2)
+██████████████████████████████████████████████████████████████████████
+  Started: 2026-05-10T08:32:06.602589+00:00
+======================================================================
+STEP 1: Load + filter dynamics-eligible markets
+======================================================================
+  Loaded 1000 rows from markets_clean.csv
+  With yes_token_id: 999 (1 dropped)
+  With valid open/close dates: 946
+  With duration >= 5 days: 628 (dynamics-eligible)
+
+======================================================================
+STEP 2: Fetch CLOB price history (628 markets, fidelity=720)
+======================================================================
+  Already cached on disk: 628/628
+  To fetch: 0 (then ~0.0 min with polite delay)
+  Progress: 100/628  (cache_hits=100, new=0, fail=0)
+  Progress: 200/628  (cache_hits=200, new=0, fail=0)
+  Progress: 300/628  (cache_hits=300, new=0, fail=0)
+  Progress: 400/628  (cache_hits=400, new=0, fail=0)
+  Progress: 500/628  (cache_hits=500, new=0, fail=0)
+  Progress: 600/628  (cache_hits=600, new=0, fail=0)
+
+  Done: 628 histories collected (628 from cache, 0 new fetches, 0 failures)
+  With >= 4 observations: 512/628
+
+======================================================================
+STEP 3: Compute snapshot prices at ['0.10', '0.25', '0.50', '0.75', '0.90', '0.95']
+======================================================================
+  Snapshot coverage (markets with non-null price):
+    0.10: 489/512  (95.5%)
+    0.25: 501/512  (97.9%)
+    0.50: 507/512  (99.0%)
+    0.75: 510/512  (99.6%)
+    0.90: 511/512  (99.8%)
+    0.95: 511/512  (99.8%)
+
+======================================================================
+STEP 4: Per-snapshot calibration (full dynamics sample)
+======================================================================
+  final            n=512  BSS=0.732777  slope=1.54071
+  pct=0.10  n= 489  BSS=0.4568  slope=1.14642  CI=[0.96032, 1.41187]  longshot_pp=2.5036
+  pct=0.25  n= 501  BSS=0.5319  slope=1.24626  CI=[1.05325, 1.51085]  longshot_pp=2.0633
+  pct=0.50  n= 507  BSS=0.5769  slope=1.2582  CI=[1.07462, 1.56508]  longshot_pp=0.982
+  pct=0.75  n= 510  BSS=0.6410  slope=1.23054  CI=[1.03784, 1.54364]  longshot_pp=1.2083
+  pct=0.90  n= 511  BSS=0.6844  slope=1.28006  CI=[1.02958, 1.7499]  longshot_pp=1.1099
+  pct=0.95  n= 511  BSS=0.7079  slope=1.2057  CI=[0.98293, 1.67481]  longshot_pp=0.7359
+
+======================================================================
+STEP 5: Per-category dynamics (n >= 20)
+======================================================================
+  Business         n=  15  SKIPPED (< 20)
+  Crypto           n=  41  slopes [10/25/50/75/90/95%]:   1.89   2.55   1.90   1.81  22.83  16.45
+  Other            n=  47  slopes [10/25/50/75/90/95%]:   1.08   1.36   0.98   1.09   1.03   1.01
+  Politics         n= 236  slopes [10/25/50/75/90/95%]:   1.13   1.16   1.38   1.48   2.30   2.08
+  Pop Culture      n=  20  slopes [10/25/50/75/90/95%]:     —     —     —     —     —     —
+  Sports           n= 153  slopes [10/25/50/75/90/95%]:   1.08   1.19   1.14   0.93   0.86   0.85
+
+======================================================================
+STEP 6: Save outputs
+======================================================================
+  /workspace/output/dynamics_data.json (34.2 KB)
+  /workspace/output/dynamics_category.json (156.5 KB)
+
+  Completed: 2026-05-10T08:32:18.198820+00:00 (11.6s)
+██████████████████████████████████████████████████████████████████████
