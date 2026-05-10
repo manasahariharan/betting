@@ -171,11 +171,13 @@ def load_dynamics_sample():
         print(f"  FATAL: {csv_path} not found. Run Analysis 1 first.")
         sys.exit(1)
 
-    df = pd.read_csv(csv_path)
+    # yes_token_id is a 77-digit integer that float() truncates; force
+    # string dtype so we keep all digits.
+    df = pd.read_csv(csv_path, dtype={"yes_token_id": str})
     print(f"  Loaded {len(df)} rows from markets_clean.csv")
 
     n0 = len(df)
-    df = df[df["yes_token_id"].notna()].copy()
+    df = df[df["yes_token_id"].notna() & (df["yes_token_id"] != "nan")].copy()
     print(f"  With yes_token_id: {len(df)} ({n0 - len(df)} dropped)")
 
     df["open_dt"] = pd.to_datetime(df["start_date"], errors="coerce",
@@ -192,14 +194,11 @@ def load_dynamics_sample():
     print(f"  With duration >= {MIN_DURATION_DAYS} days: {len(df)} "
           "(dynamics-eligible)")
 
-    df["open_ts"] = df["open_dt"].astype("int64") // 10**9
-    df["close_ts"] = df["close_dt"].astype("int64") // 10**9
-
-    # yes_token_id can come back as float or scientific notation when
-    # pandas parses huge ints from CSV — coerce to clean string.
-    df["yes_token_id"] = df["yes_token_id"].apply(
-        lambda x: str(int(float(x))) if pd.notna(x) else None
-    )
+    # pandas 3.0 datetime arrays may use unit='us' or 'ns', so dividing
+    # an int64 cast by 10**9 is fragile. Use the per-row .timestamp()
+    # accessor which always returns seconds since epoch.
+    df["open_ts"] = df["open_dt"].apply(lambda x: int(x.timestamp()))
+    df["close_ts"] = df["close_dt"].apply(lambda x: int(x.timestamp()))
 
     return df
 
