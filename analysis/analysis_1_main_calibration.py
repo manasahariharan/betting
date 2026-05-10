@@ -25,7 +25,6 @@ Outputs:
 import json
 import sys
 import time
-from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -494,7 +493,6 @@ def main():
     df = fetch_population(target_markets=10000, min_volume=10000)
     sample, sanity = stratified_sample(df, target_n=1000)
     sample = fetch_clob_prices(sample)
-    sample.to_csv(DATA_DIR / "markets_clean.csv", index=False)
     cal = run_calibration(sample)
     cats = run_category_calibration(sample)
     save_outputs(cal, cats, sanity, sample)
