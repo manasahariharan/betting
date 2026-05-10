@@ -181,154 +181,182 @@ Resume framing should emphasize "calibration dynamics in decentralized forecasti
 
 ## Part 3: Aligned Visualization Narrative & Sections
 
-### Final Recommended Structure (Simplified, 5 Visual Moments)
+### Final Recommended Structure (Simplified 3-Section Narrative)
 
-The narrative is framed as an **investigation**, not predetermined conclusions. Each section asks a question, introduces evidence, and motivates the next section.
-
----
-
-### HERO — "The Market Was Wrong… Until It Wasn't"
-
-**Visual:** One animated market timeline showing a market that starts at 20–30%, slowly rises, and resolves YES.
-
-**Overlay annotations:**
-- "10 days before resolution: 24%"
-- "2 days before: 61%"
-- "Final outcome: YES"
-
-**Goal:** Immediately teach that probabilities move, markets learn, forecasting is dynamic. This is the emotional hook.
-
-**Alternative opening hook:**
-> "A market gave this event a 3% chance. It happened. Was this randomness — or do markets systematically struggle with unlikely events?"
+This version removes the conceptual overlap between static calibration, dynamics, category comparisons, and longshot analysis. Everything collapses into 3 clean sections that each answer a different question at a different level of abstraction.
 
 ---
 
-### SECTION 1 — "How Accurate Are Markets Overall?"
+### SECTION 1 — "What Are Prediction Markets Actually Predicting?"
 
-**Core Question:**
-> "Across many markets, how often do probabilities line up with actual outcomes?"
+#### Purpose
 
-**Visualization:** One canonical calibration/reliability chart:
+Introduce:
+- what a market probability means,
+- how probabilities evolve,
+- and what the project is investigating.
+
+This section establishes the investigative framing:
+
+> "Can these probabilities be interpreted as meaningful forecasts?"
+
+#### Main Questions
+- What does a market probability represent?
+- Why might prediction markets be interesting to analyze?
+- What kinds of mistakes might they make?
+
+#### Visualization
+
+**Main Visual:** Single market timeline — probability evolves over time toward resolution.
+
+Potential annotations:
+- News/event markers
+- Large swings
+- Final outcome
+
+#### Scroll Mechanics
+
+Sticky chart with progressive reveals:
+1. Market opens
+2. Probabilities fluctuate
+3. Event occurs
+4. Market resolves
+
+Very lightweight interactions.
+
+**Goal:** Orient the reader, teach the visual language, create curiosity.
+
+---
+
+### SECTION 2 — "How Do Market Probabilities Behave?" (Analytical Centerpiece)
+
+#### Purpose
+
+This is where the core analysis lives. Crucially, **calibration, category comparisons, and dynamics all live inside ONE coherent visualization system.** This is the key simplification — instead of separate sections for each, they become scroll steps within a single persistent chart.
+
+#### Main Questions
+- Do market probabilities align with outcomes?
+- Does this relationship change over market lifetime?
+- Do some categories behave differently?
+
+Importantly: these are **open questions**, not predetermined findings.
+
+#### Visualization System
+
+**Core Visual:** Single calibration chart framework reused throughout the entire section.
+
+The chart itself stays structurally constant:
 - Diagonal reference line
-- Observed calibration curve
-- Confidence ribbon
-- Sparse bins faded (showing uncertainty)
-- Optional: probability histogram underneath
+- Calibration curve
+- Uncertainty band
 
-**Default state:** Overall market calibration
+What changes: the subset/time slice being shown.
 
-**Interaction:** Category pills/toggle buttons to filter (politics, sports, crypto) — same chart frame, only data changes. Do NOT show separate charts per category.
+#### Scroll Narrative (Steps within Section 2)
 
-**Scroll Mechanics:**
-1. Diagonal line appears
-2. Bins populate
-3. Calibration curve fades in
-4. Uncertainty bands appear
-5. Annotations highlight interesting regions
-6. Category toggles activate
+**Step 1 — Overall Market**
 
-**Reader Takeaway:**
-> "At a high level, market probabilities appear reasonably aligned with outcomes — but the overall picture may hide something."
+Show aggregate calibration.
 
-**Tone:** Investigative, not declarative.
+> "At a high level, how closely do probabilities match outcomes?"
 
----
+**Step 2 — Early vs Late Market Life**
 
-### SECTION 2 — "But Markets Avoid Extreme Predictions"
+Same chart transitions between early, middle, and late snapshots.
 
-**Core Question:**
-> "Are traders avoiding extreme probabilities — or correctly expressing uncertainty?"
+> "Do probabilities behave differently earlier in a market's life?"
 
-**Visualization:** Probability compression visual:
-- Predicted probability distribution histogram
-- Compare early lifecycle vs. near resolution
-- Shows clustering around 0.4–0.6 early, spreading later
+This becomes the main narrative arc.
 
-**Key insight:** Very few markets near 0 or 1 early in life; compression toward 50%.
+**Step 3 — Category Comparisons**
 
-**This replaces** complicated tail diagnostics and multiple regression outputs with a single intuitive visual.
+Allow transitions/toggles between politics, sports, crypto, etc.
 
-**Tone:**
-> "Extreme probabilities appear rarer than expected."
+> "Do different kinds of markets converge differently?"
 
----
+#### Supporting Visual (Optional)
 
-### SECTION 3 — "Markets Learn Over Time" (Centerpiece)
+Small line chart below: calibration slope over relative time. This acts as a summary metric, not the main visual focus.
 
-**Core Question:**
-> "Are markets equally informative throughout their lifetime, or do probabilities behave differently as resolution approaches?"
+#### Scroll Mechanics
 
-**Primary Visualization:** Line chart of calibration slope over market lifetime:
-- X-axis: % of market life elapsed
-- Y-axis: Calibration slope
-- Confidence ribbon
-- Reference line at slope = 1
+One persistent sticky chart container throughout the section. As text scrolls:
+- Data subsets change
+- Annotations update
+- Curves transition smoothly
 
-**Supporting Visual:** Three small static calibration snapshots:
-- Early (10% elapsed)
-- Middle (50% elapsed)
-- Late (95% elapsed)
-
-The viewer sees curves approach the diagonal over time — the "aha" moment.
-
-**Scroll Mechanics:**
-1. Early snapshot appears
-2. Mid-life snapshot added
-3. Late snapshot added
-4. Aggregate metric line animates across time
-
-**Optional:** Small multiples by category (politics, sports, crypto) showing slope-over-time curves — likely sports converge faster, politics remain compressed longer.
-
-**Reader Takeaway:**
-> "The data suggests markets behave less like fixed forecasts and more like evolving information systems."
+This is much cleaner than many independent charts.
 
 ---
 
-### SECTION 4 — "The Biggest Surprises"
+### SECTION 3 — "Where Were Markets Most Surprised?"
 
-**Core Question:**
-> "What kinds of events produced the largest gaps between market expectations and eventual outcomes?"
+#### Purpose
 
-**Visualization:** Two-column card/grid layout:
+This becomes the ending/exploration section — more human and memorable.
 
-| Biggest Misses | Biggest Surprises |
-|----------------|-------------------|
-| Markets highly confident but wrong | Markets given tiny odds that resolved YES |
+#### Main Questions
+- Which events diverged most from market expectations?
+- Were there persistent longshot effects?
+- Which events produced the largest reversals?
+
+#### Visualization
+
+**Main Visual:** Card/grid layout of notable markets.
+
+Examples:
+- Large forecast misses
+- Surprising YES resolutions
+- Dramatic reversals
 
 Each card includes:
-- Mini sparkline
-- Headline probability
+- Sparkline
+- Probability path
 - Final outcome
-- Category label
+- Category
 
-**Longshot analysis lives here naturally** — integrated into the "surprising outcomes" framing rather than as a separate technical section.
+#### Longshot Analysis Lives Here Naturally
 
-**Scroll Mechanics:** Light: staggered reveals, fade-ins, hover expansion. No heavy sticky behavior.
+Instead of making longshot bias a separate technical/econometric section, integrate it into the "surprising outcomes" framing:
+
+> "Some of the largest surprises came from markets that spent most of their lifetime below 10%."
+
+This feels much more cohesive and preserves the interesting findings without the conceptual clutter.
+
+#### Scroll Mechanics
+
+Lighter interactions:
+- Staggered reveals
+- Hover expansion
+- Fade-ins
+
+No heavy sticky behavior needed. The project should feel less dense by this point.
 
 ---
 
-### FOOTER — Methodology & Limitations
+### Why This 3-Section Structure Works Better
 
-Explicit statement of:
-- Relative-time normalization limitations
-- Independence assumptions in confidence intervals
-- Sample representativeness caveats
-- Data quality constraints
+#### 1. One Core Analytical Framework
 
----
+Instead of many disconnected analyses, everything centers around probability calibration over time.
 
-### Why This Structure Works
+#### 2. Less Visual Repetition
 
-| Principle | How It's Achieved |
-|-----------|-------------------|
-| Single coherent narrative | "Markets learn over time" threads everything together |
-| Progressive abstraction | One market → many markets → many markets over time → failures |
-| Minimal chart grammar | One calibration plot reused; one histogram; one line chart; cards |
-| Low cognitive load | Same visual encoding, same axes, data changes |
-| Easier frontend | ~5 chart components, simple transitions, no complex morphing |
-| Statistically honest | Uncertainty visible everywhere; investigative tone |
-| Mobile-friendly | Fewer dense charts; static labels; no hover dependence |
-| Memorable | "The prediction market learning visualization" |
+You reuse one chart grammar and one conceptual lens. This dramatically improves readability.
+
+#### 3. Better Narrative Progression
+
+| Section | Question |
+|---------|----------|
+| Section 1 | What are these probabilities? |
+| Section 2 | How do these probabilities behave? |
+| Section 3 | Where do they break down? |
+
+That's clean and intuitive. Each section increases abstraction, broadens scope, and naturally motivates the next question.
+
+#### Most Important Improvement
+
+The key upgrade: **longshot bias becomes part of the "surprise/failure" narrative**, not a separate econometric subsection. This removes a huge amount of conceptual clutter while preserving the interesting findings.
 
 ---
 
@@ -343,19 +371,19 @@ Explicit statement of:
 
 ### Top 5 Visualization Upgrades
 1. Open with a **concrete surprising example** (not abstract metrics)
-2. Reduce to **4–5 major visual moments** and make them excellent
+2. Keep **one persistent calibration chart** that transitions through subsets (the Section 2 system)
 3. Use **small multiples/snapshots** instead of morphing animations
 4. Design **mobile-first** (fewer bins, no hover dependence, static labels)
 5. Add **micro-explainer visuals** for key concepts (calibration, slope, compression)
 
-### Recommended Final Chart Set (Only 5)
-1. **Hero timeline** — Single market probability evolution
-2. **Overall calibration** — One clean reliability diagram with category filtering
-3. **Probability compression** — Histogram of probabilities over lifecycle stages
-4. **Calibration improves over time** — Slope-over-time chart + 3 snapshots (centerpiece)
-5. **Biggest surprises** — Cards/tables of extreme misses and unexpected outcomes
+### Recommended Chart Set (Aligned to 3-Section Structure)
+1. **Section 1 — Market timeline** — Single market probability evolution (sticky, progressive reveals)
+2. **Section 2 — Unified calibration chart** — One persistent chart transitioning through: overall → early/mid/late snapshots → category comparisons
+3. **Section 2 (supporting)** — Calibration slope over relative time (optional small line chart)
+4. **Section 3 — Surprise cards** — Grid layout of notable markets with sparklines and outcomes
 
 ### Scope Management
-- Ship MVP first: intro + one calibration chart + one dynamics chart + one longshot section
-- Layer polish (category transitions, animations, storytelling refinements) after deployment
+- Ship MVP first: intro timeline + one calibration chart with scroll steps + surprise cards
+- Layer polish (category transitions, smooth animations, storytelling refinements) after deployment
 - The deployed artifact matters more than perfect completeness
+- The 3-section structure is much more achievable than the earlier 5-section proposals
