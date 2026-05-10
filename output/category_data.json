@@ -1,0 +1,181 @@
+{
+  "generated": "2026-05-10T07:16:11.007450+00:00",
+  "description": "Analysis 1: Per-category calibration",
+  "methodology": {
+    "min_category_n": 30
+  },
+  "categories": {
+    "Other": {
+      "label": "Other",
+      "n_markets": 494,
+      "n_resolved_yes": 144,
+      "n_resolved_no": 350,
+      "base_rate": 0.2915,
+      "brier_score": 0.09106,
+      "brier_score_baseline": 0.206527,
+      "bss": 0.559088,
+      "buckets": [
+        {
+          "bin_lower": 0.0,
+          "bin_upper": 0.05,
+          "bin_center": 0.025,
+          "mean_predicted": 0.0073,
+          "mean_actual": 0.01449,
+          "n": 207
+        },
+        {
+          "bin_lower": 0.05,
+          "bin_upper": 0.1,
+          "bin_center": 0.075,
+          "mean_predicted": 0.06513,
+          "mean_actual": 0.0,
+          "n": 19
+        },
+        {
+          "bin_lower": 0.1,
+          "bin_upper": 0.15,
+          "bin_center": 0.125,
+          "mean_predicted": 0.12388,
+          "mean_actual": 0.04762,
+          "n": 21
+        },
+        {
+          "bin_lower": 0.15,
+          "bin_upper": 0.2,
+          "bin_center": 0.175,
+          "mean_predicted": 0.16739,
+          "mean_actual": 0.14286,
+          "n": 14
+        },
+        {
+          "bin_lower": 0.2,
+          "bin_upper": 0.25,
+          "bin_center": 0.225,
+          "mean_predicted": 0.22714,
+          "mean_actual": 0.07143,
+          "n": 14
+        },
+        {
+          "bin_lower": 0.25,
+          "bin_upper": 0.3,
+          "bin_center": 0.275,
+          "mean_predicted": 0.27479,
+          "mean_actual": 0.31579,
+          "n": 19
+        },
+        {
+          "bin_lower": 0.3,
+          "bin_upper": 0.35,
+          "bin_center": 0.325,
+          "mean_predicted": 0.33187,
+          "mean_actual": 0.375,
+          "n": 16
+        },
+        {
+          "bin_lower": 0.35,
+          "bin_upper": 0.4,
+          "bin_center": 0.375,
+          "mean_predicted": 0.37773,
+          "mean_actual": 0.54545,
+          "n": 11
+        },
+        {
+          "bin_lower": 0.4,
+          "bin_upper": 0.45,
+          "bin_center": 0.425,
+          "mean_predicted": 0.42115,
+          "mean_actual": 0.07692,
+          "n": 13
+        },
+        {
+          "bin_lower": 0.45,
+          "bin_upper": 0.5,
+          "bin_center": 0.475,
+          "mean_predicted": 0.47487,
+          "mean_actual": 0.4375,
+          "n": 16
+        },
+        {
+          "bin_lower": 0.5,
+          "bin_upper": 0.55,
+          "bin_center": 0.525,
+          "mean_predicted": 0.517,
+          "mean_actual": 0.6,
+          "n": 20
+        },
+        {
+          "bin_lower": 0.55,
+          "bin_upper": 0.6,
+          "bin_center": 0.575,
+          "mean_predicted": 0.57583,
+          "mean_actual": 0.58333,
+          "n": 12
+        },
+        {
+          "bin_lower": 0.6,
+          "bin_upper": 0.65,
+          "bin_center": 0.625,
+          "mean_predicted": 0.63,
+          "mean_actual": 0.63636,
+          "n": 11
+        },
+        {
+          "bin_lower": 0.65,
+          "bin_upper": 0.7,
+          "bin_center": 0.675,
+          "mean_predicted": 0.66866,
+          "mean_actual": 0.4375,
+          "n": 16
+        },
+        {
+          "bin_lower": 0.7,
+          "bin_upper": 0.75,
+          "bin_center": 0.725,
+          "mean_predicted": 0.71615,
+          "mean_actual": 0.76923,
+          "n": 13
+        },
+        {
+          "bin_lower": 0.75,
+          "bin_upper": 0.8,
+          "bin_center": 0.775,
+          "mean_predicted": 0.769,
+          "mean_actual": 0.7,
+          "n": 10
+        },
+        {
+          "bin_lower": 0.8,
+          "bin_upper": 0.85,
+          "bin_center": 0.825,
+          "mean_predicted": 0.83111,
+          "mean_actual": 0.88889,
+          "n": 9
+        },
+        {
+          "bin_lower": 0.85,
+          "bin_upper": 0.9,
+          "bin_center": 0.875,
+          "mean_predicted": 0.87914,
+          "mean_actual": 1.0,
+          "n": 11
+        },
+        {
+          "bin_lower": 0.9,
+          "bin_upper": 0.95,
+          "bin_center": 0.925,
+          "mean_predicted": 0.91714,
+          "mean_actual": 1.0,
+          "n": 7
+        },
+        {
+          "bin_lower": 0.95,
+          "bin_upper": 1.0,
+          "bin_center": 0.975,
+          "mean_predicted": 0.98941,
+          "mean_actual": 1.0,
+          "n": 35
+        }
+      ]
+    }
+  }
+}
