@@ -2,132 +2,110 @@
 ██████████████████████████████████████████████████████████████████████
   ANALYSIS 1: MAIN CALIBRATION
 ██████████████████████████████████████████████████████████████████████
-  Started: 2026-05-10T07:11:31.865537+00:00
+  Started: 2026-05-10T07:39:19.985520+00:00
 ======================================================================
-STEP 1: Fetching events (target ~10000 markets, vol >= $10,000)
+STEP 1: Fetching markets (target ~10000, vol >= $10,000)
 ======================================================================
-  Page 1 (offset=0, markets so far: 0)...
-  Page 11 (offset=1000, markets so far: 510)...
-  Page 21 (offset=2000, markets so far: 967)...
-  Page 31 (offset=3000, markets so far: 1841)...
-  Page 41 (offset=4000, markets so far: 3234)...
-  Page 51 (offset=5000, markets so far: 5398)...
-  Page 61 (offset=6000, markets so far: 7792)...
-  Page 71 (offset=7000, markets so far: 9934)...
+  Page 1 (offset=0, qualifying: 0, scanned: 0)...
+  Page 21 (offset=2000, qualifying: 907, scanned: 2000)...
+  Page 41 (offset=4000, qualifying: 1560, scanned: 4000)...
+  Page 61 (offset=6000, qualifying: 1967, scanned: 6000)...
+  Page 81 (offset=8000, qualifying: 2312, scanned: 8000)...
+  Page 101 (offset=10000, qualifying: 3482, scanned: 10000)...
+  Page 121 (offset=12000, qualifying: 4799, scanned: 12000)...
+  Page 141 (offset=14000, qualifying: 5890, scanned: 14000)...
+  Page 161 (offset=16000, qualifying: 7322, scanned: 16000)...
+  Page 181 (offset=18000, qualifying: 8689, scanned: 18000)...
 
-  Events scanned: 7100
-  Markets qualifying (binary, resolved, vol >= $10,000): 10057
+  Raw markets scanned: 19900
+  Qualifying (binary, resolved, vol >= $10,000): 10016
 
   Category distribution:
-    Other               :  8387 (83.4%)
-    Sports              :   651 (6.5%)
-    US-current-affairs  :   234 (2.3%)
-    Crypto              :   218 (2.2%)
-    Pop-Culture         :   109 (1.1%)
-    Coronavirus         :    84 (0.8%)
-    Business            :    80 (0.8%)
-    NBA Playoffs        :    75 (0.7%)
-    NFTs                :    60 (0.6%)
-    Ukraine & Russia    :    36 (0.4%)
-    Global Politics     :    33 (0.3%)
-    Chess               :    31 (0.3%)
-    Science             :    26 (0.3%)
-    Art                 :    18 (0.2%)
-    Olympics            :     9 (0.1%)
-    Space               :     3 (0.0%)
-    Poker               :     1 (0.0%)
-    Tech                :     1 (0.0%)
-    Sports-             :     1 (0.0%)
+    Politics            :  3887 (38.8%)
+    Sports              :  2534 (25.3%)
+    Other               :  2321 (23.2%)
+    Crypto              :   574 (5.7%)
+    Pop Culture         :   299 (3.0%)
+    Business            :   271 (2.7%)
+    Science             :   130 (1.3%)
 
 ======================================================================
-STEP 2: Stratified sample (n=600)
+STEP 2: Stratified sample (n=1000)
 ======================================================================
-  Sample size: 605
-    Other               :  500
-    Sports              :   39
-    US-current-affairs  :   14
-    Crypto              :   13
-    Pop-Culture         :    7
-    Coronavirus         :    5
-    Business            :    5
-    NBA Playoffs        :    4
-    NFTs                :    4
-    Ukraine & Russia    :    2
-    Global Politics     :    2
-    Chess               :    2
-    Science             :    2
-    Art                 :    1
-    Olympics            :    1
-    Space               :    1
-    Poker               :    1
-    Tech                :    1
-    Sports-             :    1
+  Sample size: 1000
+    Politics            :  388
+    Sports              :  253
+    Other               :  232
+    Crypto              :   57
+    Pop Culture         :   30
+    Business            :   27
+    Science             :   13
 
-  Merging into 'Other' for category analysis: ['US-current-affairs', 'Crypto', 'Pop-Culture', 'Coronavirus', 'Business', 'NBA Playoffs', 'NFTs', 'Ukraine & Russia', 'Global Politics', 'Chess', 'Science', 'Art', 'Olympics', 'Space', 'Poker', 'Tech', 'Sports-']
+  Merging into 'Other' for category analysis: ['Science']
 
 ======================================================================
-STEP 3: Fetching CLOB price history for 605 markets
+STEP 3: Fetching CLOB price history (1000 markets)
 ======================================================================
-  Markets with YES token IDs: 601/605
-  Progress: 50/601 (49 ok, 1 no data)
-  Progress: 100/601 (97 ok, 3 no data)
-  Progress: 150/601 (146 ok, 4 no data)
-  Progress: 200/601 (195 ok, 5 no data)
-  Progress: 250/601 (245 ok, 5 no data)
-  Progress: 300/601 (295 ok, 5 no data)
-  Progress: 350/601 (345 ok, 5 no data)
-  Progress: 400/601 (394 ok, 6 no data)
-  Progress: 450/601 (443 ok, 7 no data)
-  Progress: 500/601 (493 ok, 7 no data)
-  Progress: 550/601 (494 ok, 56 no data)
-  Progress: 600/601 (494 ok, 106 no data)
+  With YES token IDs: 999/1000
+  Progress: 100/999 (100 ok, 0 no data)
+  Progress: 200/999 (198 ok, 2 no data)
+  Progress: 300/999 (297 ok, 3 no data)
+  Progress: 400/999 (394 ok, 6 no data)
+  Progress: 500/999 (494 ok, 6 no data)
+  Progress: 600/999 (594 ok, 6 no data)
+  Progress: 700/999 (645 ok, 55 no data)
+  Progress: 800/999 (663 ok, 137 no data)
+  Progress: 900/999 (708 ok, 192 no data)
 
-  Done: 494 prices, 107 failed
-  Markets with CLOB prices: 494/605
+  Done: 806 prices, 193 failed
+  Markets with CLOB prices: 806/1000
 
 ======================================================================
 STEP 4: Calibration analysis
 ======================================================================
-  Markets with CLOB prices: 494
-  N=494  YES=144  NO=350  base_rate=0.2915
-  Brier=0.091060  BSS=0.559088
+  Markets with CLOB prices: 806
+  N=806  YES=244  NO=562  base_rate=0.3027
+  Brier=0.080020  BSS=0.620911
 
          Bin      Pred    Actual      N
   ------------------------------------
-  0.00-0.05    0.0073    0.0145    207
-  0.05-0.10    0.0651    0.0000     19
-  0.10-0.15    0.1239    0.0476     21
-  0.15-0.20    0.1674    0.1429     14
-  0.20-0.25    0.2271    0.0714     14
-  0.25-0.30    0.2748    0.3158     19
-  0.30-0.35    0.3319    0.3750     16
-  0.35-0.40    0.3777    0.5454     11
-  0.40-0.45    0.4212    0.0769     13
-  0.45-0.50    0.4749    0.4375     16
-  0.50-0.55    0.5170    0.6000     20
-  0.55-0.60    0.5758    0.5833     12
-  0.60-0.65    0.6300    0.6364     11
-  0.65-0.70    0.6687    0.4375     16
-  0.70-0.75    0.7161    0.7692     13
-  0.75-0.80    0.7690    0.7000     10
-  0.80-0.85    0.8311    0.8889      9
-  0.85-0.90    0.8791    1.0000     11
-  0.90-0.95    0.9171    1.0000      7
-  0.95-1.00    0.9894    1.0000     35
-
-  2 buckets have n < 10 (flagged for charts)
+  0.00-0.05    0.0071    0.0028    360
+  0.05-0.10    0.0704    0.0000     30
+  0.10-0.15    0.1261    0.0667     30
+  0.15-0.20    0.1726    0.1177     17
+  0.20-0.25    0.2283    0.2308     13
+  0.25-0.30    0.2755    0.3044     23
+  0.30-0.35    0.3250    0.2353     17
+  0.35-0.40    0.3760    0.3333     21
+  0.40-0.45    0.4243    0.3333     24
+  0.45-0.50    0.4740    0.6471     17
+  0.50-0.55    0.5097    0.5435     46
+  0.55-0.60    0.5720    0.4783     23
+  0.60-0.65    0.6271    0.7059     17
+  0.65-0.70    0.6720    0.8333     18
+  0.70-0.75    0.7193    0.6429     14
+  0.75-0.80    0.7696    0.7037     27
+  0.80-0.85    0.8301    1.0000     15
+  0.85-0.90    0.8781    0.9091     11
+  0.90-0.95    0.9277    1.0000     18
+  0.95-1.00    0.9871    1.0000     65
 
 ======================================================================
 STEP 5: By-category calibration
 ======================================================================
-  Other               : n= 494  BSS=0.559088  base_rate=0.291
+  Business            : n=  27 — SKIPPED (< 30)
+  Crypto              : n=  57  BSS=0.8432  base_rate=0.298
+  Other               : n=  58  BSS=0.6476  base_rate=0.414
+  Politics            : n= 382  BSS=0.6671  base_rate=0.314
+  Pop Culture         : n=  29 — SKIPPED (< 30)
+  Sports              : n= 253  BSS=0.4817  base_rate=0.289
 
 ======================================================================
 STEP 6: Saving outputs
 ======================================================================
-  /workspace/data/markets_clean.csv (157.4 KB)
-  /workspace/output/calibration_data.json (4.8 KB)
-  /workspace/output/category_data.json (4.3 KB)
+  /workspace/data/markets_clean.csv (307.6 KB)
+  /workspace/output/calibration_data.json (4.4 KB)
+  /workspace/output/category_data.json (16.4 KB)
 
-  Completed: 2026-05-10T07:16:11.007703+00:00 (279s)
+  Completed: 2026-05-10T07:47:48.907346+00:00 (509s)
 ██████████████████████████████████████████████████████████████████████
