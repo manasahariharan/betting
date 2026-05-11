@@ -366,25 +366,124 @@ blockquote {
   color: var(--text-muted);
   margin: 4px 0 0;
 }
+
+/* Snapshot dial */
+.snapshot-dial-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 10px;
+  flex-wrap: wrap;
+}
+.snapshot-dial-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-weight: 600;
+}
+.snapshot-dial {
+  display: inline-flex;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+.snap-btn {
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  padding: 7px 14px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  border-right: 1px solid var(--border);
+  transition: background 0.15s, color 0.15s;
+}
+.snap-btn:last-child { border-right: 0; }
+.snap-btn:hover { color: var(--text); background: var(--bg-card-hover); }
+.snap-btn.active {
+  background: var(--accent-dim);
+  color: #fff;
+}
+.snapshot-dial-help {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+/* Picker */
+.selector-picker-wrap { margin-top: 28px; }
+.selector-picker-prompt {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.selector-picker-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.selector-picker-controls input[type="search"],
+.selector-picker-controls select {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+}
+.selector-picker-controls input[type="search"] {
+  flex: 1 1 220px;
+  min-width: 160px;
+}
+.selector-picker-controls input[type="search"]:focus,
+.selector-picker-controls select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.selector-picker-controls select { flex-shrink: 0; cursor: pointer; }
+.selector-picker-count {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
 #selector-market-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  max-height: 360px;
+  max-height: 380px;
   overflow-y: auto;
   padding-right: 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px;
+  background: rgba(13,17,23,0.4);
+}
+#selector-market-list:empty::before {
+  content: "No markets match.";
+  display: block;
+  padding: 12px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-style: italic;
 }
 .selector-market-row {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 8px 14px;
+  border-radius: 6px;
+  padding: 8px 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.15s, background 0.15s;
   font-size: 0.85rem;
   color: var(--text);
 }
@@ -393,19 +492,55 @@ blockquote {
   border-color: var(--accent);
   background: rgba(88,166,255,0.08);
 }
-.selector-market-question {
+.selector-market-row.no-snap {
+  opacity: 0.5;
+}
+.selector-market-main {
   flex: 1 1 auto;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.selector-market-question {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.selector-market-meta {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.selector-market-cat-chip {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
 }
 .selector-market-outcome {
   font-family: var(--font-mono);
   font-size: 0.78rem;
   flex-shrink: 0;
-  margin-left: 12px;
+  margin-left: 10px;
   white-space: nowrap;
+  text-align: right;
+}
+.selector-market-outcome .now-price {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.selector-market-outcome .resolved-tag {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  font-family: var(--font-sans);
 }
 
 /* Methodology note */
@@ -648,22 +783,29 @@ footer a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<!-- Section 2B: Category + market selector -->
+<!-- Section 2B: Category + market selector with snapshot dial -->
 <section id="section-2b-selector">
   <div class="wide-container">
     <div class="section-label">Explore by category</div>
-    <h2>Not all categories are equal</h2>
-    <p style="max-width:720px;">
-      <span class="highlight-green">Crypto</span> markets are the best-calibrated&mdash;clear binary
-      outcomes, quantitative thresholds.
+    <h2>Calibration over time, by category</h2>
+    <p style="max-width:760px;">
+      <span class="highlight-green">Crypto</span> markets are the best-calibrated overall&mdash;clear
+      binary outcomes, quantitative thresholds.
       <span class="highlight-orange">Sports</span> lag behind&mdash;information arrives at game time,
       not gradually.
       <span class="highlight-purple">Politics</span> sits in between.
     </p>
-    <p style="max-width:720px;">
-      Pick a category to see its calibration curve, then select a specific market to see where
-      its final price landed on the calibration chart.
+    <p style="max-width:760px;">
+      Drag the <strong>snapshot dial</strong> to see what each category's calibration curve looked
+      like at that fraction of a market's lifetime. Then pick a market to overlay its price at the
+      same snapshot&mdash;move the dial and watch the dot trace the market's path toward resolution.
     </p>
+
+    <div class="snapshot-dial-row">
+      <span class="snapshot-dial-label">Snapshot:</span>
+      <div class="snapshot-dial" id="selector-snap-dial"></div>
+      <span class="snapshot-dial-help" id="selector-snap-help"></span>
+    </div>
 
     <div class="category-toggles" id="selector-cat-toggles"></div>
     <p id="selector-cat-desc"></p>
@@ -672,10 +814,20 @@ footer a:hover { text-decoration: underline; }
       <div id="selector-chart"></div>
     </div>
 
-    <div style="margin-top:24px;">
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">
-        Select a market to overlay its final price on the calibration chart:
+    <div class="selector-picker-wrap">
+      <p class="selector-picker-prompt" id="selector-picker-prompt">
+        Pick a market to track its price across snapshots:
       </p>
+      <div class="selector-picker-controls">
+        <input type="search" id="selector-market-search" placeholder="Search markets&hellip;" autocomplete="off">
+        <select id="selector-market-sort" aria-label="Sort markets">
+          <option value="end_date_desc">Latest closed</option>
+          <option value="end_date_asc">Earliest closed</option>
+          <option value="miss_now">Biggest miss at this snapshot</option>
+          <option value="volume_desc">Highest volume</option>
+        </select>
+        <span class="selector-picker-count" id="selector-picker-count"></span>
+      </div>
       <div id="selector-market-list"></div>
     </div>
   </div>
@@ -777,6 +929,16 @@ footer a:hover { text-decoration: underline; }
         BSS is the more reliable dynamics signal at those time points.
       </p>
       <p>
+        <strong>Explore-by-category section:</strong> Curves and BSS are read from the dynamics sample
+        (512 markets that cleared the &ge; 5 day duration and &ge; 4 tick history filters), so the
+        per-category numbers here will differ slightly from the 806-market overall calibration view in
+        the scrolly above. The market list shows all 512 markets sortable by close date, search-filtered
+        by question text. A market's overlay dot uses its most-recent CLOB tick at or before the
+        selected snapshot; if a market has no tick before that point (mainly an issue at the 10%
+        snapshot), the dot falls back to the nearest earlier snapshot and is rendered semi-transparent
+        with a tooltip note.
+      </p>
+      <p>
         <strong>Limitations:</strong> Market prices are not IID forecasts from a stable process. Aggregate
         calibration curves are mixtures of heterogeneous mechanisms. Final prices may partly reflect
         resolution certainty rather than forecasting quality. Observed pricing patterns are <em>consistent
@@ -810,7 +972,8 @@ footer a:hover { text-decoration: underline; }
   const dataBase = (document.location.pathname.endsWith("/") ? "" : "") + "data/";
 
   const [calibrationData, categoryData, dynamicsData, dynamicsCategoryData,
-         hallOfShame, hiddenGems, longshotData, longshotVolume] = await Promise.all([
+         hallOfShame, hiddenGems, longshotData, longshotVolume,
+         marketsSnapshotIndex] = await Promise.all([
     d3.json(dataBase + "calibration_data.json"),
     d3.json(dataBase + "category_data.json"),
     d3.json(dataBase + "dynamics_data.json"),
@@ -819,6 +982,14 @@ footer a:hover { text-decoration: underline; }
     d3.json(dataBase + "hidden_gems.json"),
     d3.json(dataBase + "longshot_data.json"),
     d3.json(dataBase + "longshot_volume.json"),
+    // Per-market snapshot index for Section 2B (interactive overlay).
+    // Falls back to a synthetic empty pool if the file isn't present yet
+    // (e.g. before the user has re-run analysis 3 with the new emitter).
+    d3.json(dataBase + "markets_snapshot_index.json").catch(() => ({
+      markets: [],
+      snapshot_pcts: [0.10, 0.25, 0.50, 0.75, 0.90, 0.95],
+      n_markets: 0,
+    })),
   ]);
 
   // ── Hero stats ──
@@ -1447,54 +1618,142 @@ footer a:hover { text-decoration: underline; }
     el.appendChild(plotEl);
   }
 
-  // ── Section 2B: Category selector + market overlay ──
-  let selectorActiveCat = "All";
-  let selectorActiveMarket = null;
+  // ── Section 2B: snapshot-aware category selector + market overlay ──
+  //
+  // Three pieces of state drive this section:
+  //   selectorActiveSnap   — which snapshot the dial is on
+  //                          ("0.10" | "0.25" | "0.50" | "0.75" | "0.90"
+  //                           | "0.95" | "final")
+  //   selectorActiveCat    — which category is highlighted
+  //                          ("All" | "Politics" | ...)
+  //   selectorActiveMarket — which (if any) market is overlaid as a dot
+  //
+  // Data sources:
+  //   dynamicsData.snapshots[k]              — full-sample bucket+BSS at
+  //                                            snapshot k (k in SNAP_KEYS\final)
+  //   dynamicsData.final_price_sanity_check  — full-sample at final
+  //   dynamicsCategoryData.categories[c].snapshots[k]   — per-category at k
+  //   dynamicsCategoryData.categories[c].final_price    — per-category at final
+  //   marketsSnapshotIndex.markets           — per-market price at every
+  //                                            snapshot, for the overlay dot
+  //
+  // None of the per-snapshot/per-category aggregates are computed here —
+  // they're all precomputed by analysis_3 and just looked up.
 
-  // Pool of markets the user can browse: hall_of_shame + hidden_gems
-  const selectorMarketPool = [
-    ...(hallOfShame.markets || []),
-    ...(hiddenGems.markets  || []),
-  ];
-
-  const selectorCatDescs = {
-    "All":      `All ${calibrationData.n_markets} markets — solid overall calibration (BSS ${(calibrationData.bss).toFixed(2)}).`,
-    "Crypto":   "Best-calibrated category — clear binary thresholds, quantitative outcomes.",
-    "Politics": "Mid-range — gradual information incorporation over a market's lifetime.",
-    "Sports":   "Weakest — information arrives at game time, not gradually.",
-    "Other":    "Mixed: a heterogeneous bucket of remaining tags.",
+  const SNAP_KEYS = ["0.10", "0.25", "0.50", "0.75", "0.90", "0.95", "final"];
+  const SNAP_LABELS = {
+    "0.10": "10%", "0.25": "25%", "0.50": "50%",
+    "0.75": "75%", "0.90": "90%", "0.95": "95%", "final": "Final",
+  };
+  const SNAP_HELP = {
+    "0.10": "Calibration at 10% of each market's lifetime — the crowd is just starting to absorb information.",
+    "0.25": "Calibration at 25% of lifetime — early but past the opening price.",
+    "0.50": "Calibration at the midpoint of each market's lifetime.",
+    "0.75": "Calibration at 75% of lifetime — most of the market's information has arrived.",
+    "0.90": "Calibration at 90% of lifetime — close to resolution.",
+    "0.95": "Calibration at 95% of lifetime — last hours before close.",
+    "final": "Final trading prices — settlement information has often leaked into the price by here.",
   };
 
-  function renderCategorySelector() {
-    const catEl  = document.getElementById("selector-cat-toggles");
-    const descEl = document.getElementById("selector-cat-desc");
-    if (!catEl || !descEl) return;
+  let selectorActiveSnap = "0.95";
+  let selectorActiveCat = "All";
+  let selectorActiveMarket = null;
+  let selectorSearch = "";
+  let selectorSort = "end_date_desc";
 
-    const cats = ["All", ...Object.keys(categoryData.categories)
-      .filter(c => categoryData.categories[c].n_markets >= 30)];
+  const marketPool = (marketsSnapshotIndex && marketsSnapshotIndex.markets) || [];
 
+  // Look up the (category × snapshot) snapshot record. Returns the
+  // dynamics snapshot object or null if the slice was below threshold or
+  // doesn't exist.
+  function getSnapRecord(cat, snapKey) {
+    if (cat === "All") {
+      if (snapKey === "final") {
+        return dynamicsData.final_price_sanity_check || null;
+      }
+      return (dynamicsData.snapshots && dynamicsData.snapshots[snapKey]) || null;
+    }
+    const catRec = dynamicsCategoryData.categories
+                && dynamicsCategoryData.categories[cat];
+    if (!catRec) return null;
+    if (snapKey === "final") {
+      return catRec.final_price || null;
+    }
+    return (catRec.snapshots && catRec.snapshots[snapKey]) || null;
+  }
+
+  // Look up the snap_NN field on a market record for a given snapshot
+  // key. Returns null if the market has no tick at that snapshot or the
+  // record isn't well-formed.
+  function getMarketSnapPrice(m, snapKey) {
+    if (!m) return null;
+    if (snapKey === "final") {
+      return (m.final_yes_price ?? null);
+    }
+    const pct = Math.round(parseFloat(snapKey) * 100);
+    const col = `snap_${String(pct).padStart(2, "0")}`;
+    const v = m[col];
+    return (v === undefined || v === null) ? null : v;
+  }
+
+  function renderSnapshotDial() {
+    const el = document.getElementById("selector-snap-dial");
+    const helpEl = document.getElementById("selector-snap-help");
+    if (!el) return;
+    el.innerHTML = SNAP_KEYS.map(k =>
+      `<button type="button" class="snap-btn ${k === selectorActiveSnap ? 'active' : ''}" data-snap="${k}">${SNAP_LABELS[k]}</button>`
+    ).join("");
+    el.querySelectorAll(".snap-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (btn.dataset.snap === selectorActiveSnap) return;
+        selectorActiveSnap = btn.dataset.snap;
+        renderSelector();
+      });
+    });
+    if (helpEl) helpEl.textContent = SNAP_HELP[selectorActiveSnap] || "";
+  }
+
+  function renderCategoryToggles() {
+    const catEl = document.getElementById("selector-cat-toggles");
+    if (!catEl) return;
+    const cats = ["All",
+      ...Object.keys(dynamicsCategoryData.categories || {})];
     catEl.innerHTML = cats.map(c =>
-      `<button class="cat-btn ${c === selectorActiveCat ? 'active' : ''}" data-cat="${c}">${c}</button>`
+      `<button type="button" class="cat-btn ${c === selectorActiveCat ? 'active' : ''}" data-cat="${c}">${c}</button>`
     ).join("");
     catEl.querySelectorAll(".cat-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        if (selectorActiveCat === btn.dataset.cat) return;
+        if (btn.dataset.cat === selectorActiveCat) return;
         selectorActiveCat = btn.dataset.cat;
-        selectorActiveMarket = null;
-        renderCategorySelector();
+        renderSelector();
       });
     });
+  }
 
-    // Optional category-specific BSS suffix
-    const info = categoryData.categories[selectorActiveCat];
-    let desc = selectorCatDescs[selectorActiveCat] || "";
-    if (info && selectorActiveCat !== "All") {
-      desc += ` BSS ${info.bss.toFixed(2)} on ${info.n_markets} markets.`;
+  function renderSelectorDescription() {
+    const descEl = document.getElementById("selector-cat-desc");
+    if (!descEl) return;
+    const snap = getSnapRecord(selectorActiveCat, selectorActiveSnap);
+    const snapLabel = SNAP_LABELS[selectorActiveSnap];
+    if (!snap) {
+      descEl.textContent = `${selectorActiveCat} · ${snapLabel}: not enough markets to compute calibration at this slice.`;
+      return;
     }
-    descEl.textContent = desc;
-
-    renderSelectorChart();
-    renderSelectorMarketList();
+    if (snap.skipped) {
+      descEl.textContent = `${selectorActiveCat} · ${snapLabel}: ${snap.skipped}.`;
+      return;
+    }
+    const bss = (typeof snap.bss === "number")
+      ? `BSS ${snap.bss.toFixed(2)}`
+      : "BSS —";
+    const n = snap.n_markets ?? "—";
+    let prefix;
+    if (selectorActiveCat === "All") {
+      prefix = `All categories at ${snapLabel} of lifetime`;
+    } else {
+      prefix = `${selectorActiveCat} at ${snapLabel} of lifetime`;
+    }
+    descEl.textContent = `${prefix} · ${bss} on ${n} markets.`;
   }
 
   function renderSelectorChart() {
@@ -1504,61 +1763,84 @@ footer a:hover { text-decoration: underline; }
     const w = el.clientWidth || 880;
     const h = 380;
 
-    let points, color;
-    if (selectorActiveCat === "All") {
-      points = bucketsToPoints(calibrationData.buckets);
-      color = COLORS["All"];
-    } else {
-      const info = categoryData.categories[selectorActiveCat];
-      points = bucketsToPoints(info.buckets, 3);
-      color = COLORS[selectorActiveCat] || "var(--accent)";
-    }
-
-    const sorted = [...points].sort((a, b) => a.predicted - b.predicted);
-    const maxN = d3.max(points, d => d.n) || 1;
+    const snap = getSnapRecord(selectorActiveCat, selectorActiveSnap);
+    const color = COLORS[selectorActiveCat] || COLORS["All"];
 
     const marks = [
       Plot.line([[0, 0], [1, 1]], {
         stroke: "var(--diagonal)", strokeWidth: 1, strokeDasharray: "6,4",
       }),
-      Plot.line(sorted, {
-        x: "predicted", y: "actual",
-        stroke: color, strokeWidth: 2.5, strokeOpacity: 0.6,
-        curve: "catmull-rom",
-      }),
-      Plot.dot(points, {
+    ];
+
+    let points = [];
+    if (snap && !snap.skipped && snap.calibration_buckets) {
+      points = bucketsToPoints(snap.calibration_buckets, 3);
+      const sorted = [...points].sort((a, b) => a.predicted - b.predicted);
+      const maxN = d3.max(points, d => d.n) || 1;
+      if (sorted.length > 1) {
+        marks.push(Plot.line(sorted, {
+          x: "predicted", y: "actual",
+          stroke: color, strokeWidth: 2.5, strokeOpacity: 0.55,
+          curve: "catmull-rom",
+        }));
+      }
+      marks.push(Plot.dot(points, {
         x: "predicted", y: "actual",
         r: d => 3 + 5 * Math.sqrt(d.n / maxN),
         fill: color, fillOpacity: 0.7,
         stroke: color, strokeWidth: 1,
         tip: true,
         title: d => `Predicted: ${(d.predicted * 100).toFixed(1)}%\nActual: ${(d.actual * 100).toFixed(1)}%\nn = ${d.n}`,
-      }),
-    ];
+      }));
+    }
 
+    // Selected-market overlay: dot at the snap-relative price vs the
+    // resolved outcome. If the market has no tick at this snapshot
+    // (snap_NN is null), fall back to its nearest earlier snapshot so
+    // the dot doesn't disappear; flag this in the tooltip.
     if (selectorActiveMarket) {
       const m = selectorActiveMarket;
-      const dotColor = m.resolved_yes === 1 ? "var(--green)" : "var(--red)";
-      marks.push(
-        Plot.dot([m], {
-          x: m.final_yes_price,
-          y: m.resolved_yes,
-          r: 9,
-          fill: dotColor,
-          stroke: "var(--bg-card)", strokeWidth: 2,
-          tip: true,
-          title: () =>
-            `${m.question}\nFinal price: ${(m.final_yes_price * 100).toFixed(1)}%\nResolved: ${m.resolved_yes ? "YES" : "NO"}`,
-        }),
-        Plot.text([m], {
-          x: m.final_yes_price,
-          y: m.resolved_yes,
-          text: () => m.question.length > 38 ? m.question.slice(0, 36) + "\u2026" : m.question,
-          dy: m.resolved_yes === 1 ? -16 : 16,
-          fill: "var(--text)", fontSize: 11,
-          textAnchor: m.final_yes_price > 0.7 ? "end" : "start",
-        }),
-      );
+      let snapPrice = getMarketSnapPrice(m, selectorActiveSnap);
+      let snapForDot = selectorActiveSnap;
+      if (snapPrice === null) {
+        // Walk earlier snapshots for a fallback price
+        const earlier = SNAP_KEYS.slice(0, SNAP_KEYS.indexOf(selectorActiveSnap));
+        for (let i = earlier.length - 1; i >= 0; i--) {
+          const v = getMarketSnapPrice(m, earlier[i]);
+          if (v !== null) { snapPrice = v; snapForDot = earlier[i]; break; }
+        }
+      }
+      if (snapPrice !== null) {
+        const dotColor = m.resolved_yes === 1 ? "var(--green)" : "var(--red)";
+        const fellback = snapForDot !== selectorActiveSnap;
+        marks.push(
+          Plot.dot([m], {
+            x: snapPrice,
+            y: m.resolved_yes,
+            r: 9,
+            fill: dotColor,
+            fillOpacity: fellback ? 0.55 : 0.95,
+            stroke: "var(--bg-card)", strokeWidth: 2,
+            tip: true,
+            title: () => {
+              const pricePct = (snapPrice * 100).toFixed(1) + "%";
+              const at = SNAP_LABELS[snapForDot];
+              const note = fellback
+                ? ` (no tick at ${SNAP_LABELS[selectorActiveSnap]}; showing ${at})`
+                : ` (at ${at})`;
+              return `${m.question}\nPrice: ${pricePct}${note}\nResolved: ${m.resolved_yes ? "YES" : "NO"}`;
+            },
+          }),
+          Plot.text([m], {
+            x: snapPrice,
+            y: m.resolved_yes,
+            text: () => m.question.length > 38 ? m.question.slice(0, 36) + "\u2026" : m.question,
+            dy: m.resolved_yes === 1 ? -16 : 16,
+            fill: "var(--text)", fontSize: 11,
+            textAnchor: snapPrice > 0.7 ? "end" : "start",
+          }),
+        );
+      }
     }
 
     const plot = Plot.plot({
@@ -1579,57 +1861,199 @@ footer a:hover { text-decoration: underline; }
       marks,
     });
     el.appendChild(plot);
+
+    if (points.length === 0) {
+      const note = document.createElement("div");
+      note.style.cssText = "padding:8px 4px; color:var(--text-dim); font-size:0.8rem; font-style:italic;";
+      note.textContent = `No calibration buckets to draw for ${selectorActiveCat} at ${SNAP_LABELS[selectorActiveSnap]} (sample below threshold or all values null).`;
+      el.appendChild(note);
+    }
+  }
+
+  // Pre-compute lower-cased question text per market so the search
+  // filter stays cheap when the user types fast on a 500-row list.
+  const _marketSearchKey = new WeakMap();
+  function searchKey(m) {
+    let k = _marketSearchKey.get(m);
+    if (!k) {
+      k = (m.question || "").toLowerCase();
+      _marketSearchKey.set(m, k);
+    }
+    return k;
+  }
+
+  function listFilterAndSort() {
+    let pool = marketPool;
+    if (selectorActiveCat !== "All") {
+      pool = pool.filter(m => m.category === selectorActiveCat);
+    }
+    const q = selectorSearch.trim().toLowerCase();
+    if (q) {
+      pool = pool.filter(m => searchKey(m).includes(q));
+    }
+    const cmp = (a, b) => {
+      switch (selectorSort) {
+        case "end_date_asc":
+          return (a.end_date || "").localeCompare(b.end_date || "");
+        case "miss_now": {
+          const ap = getMarketSnapPrice(a, selectorActiveSnap);
+          const bp = getMarketSnapPrice(b, selectorActiveSnap);
+          const am = (ap === null || a.resolved_yes == null)
+                     ? -1 : Math.abs(ap - a.resolved_yes);
+          const bm = (bp === null || b.resolved_yes == null)
+                     ? -1 : Math.abs(bp - b.resolved_yes);
+          return bm - am;
+        }
+        case "volume_desc":
+          return (b.volume || 0) - (a.volume || 0);
+        case "end_date_desc":
+        default:
+          return (b.end_date || "").localeCompare(a.end_date || "");
+      }
+    };
+    return [...pool].sort(cmp);
   }
 
   function renderSelectorMarketList() {
     const el = document.getElementById("selector-market-list");
+    const countEl = document.getElementById("selector-picker-count");
     if (!el) return;
 
-    let markets = selectorMarketPool;
-    if (selectorActiveCat !== "All") {
-      markets = markets.filter(m => m.category === selectorActiveCat);
-    }
-    // Dedupe by market_id, cap length
-    const seen = new Set();
-    markets = markets.filter(m => {
-      const k = m.market_id || m.slug || m.question;
-      if (seen.has(k)) return false;
-      seen.add(k);
-      return true;
-    }).slice(0, 30);
-
-    if (markets.length === 0) {
-      el.innerHTML = `<div style="color:var(--text-dim); font-size:0.85rem; padding:8px;">No browsable markets in this category.</div>`;
+    if (marketPool.length === 0) {
+      el.innerHTML = "";
+      if (countEl) countEl.textContent = "";
+      el.insertAdjacentHTML("afterbegin",
+        `<div style="color:var(--text-dim); font-size:0.85rem; padding:12px; font-style:italic;">
+          The per-market snapshot index isn't available yet. Run
+          <code>python analysis/analysis_3_calibration_dynamics.py</code>
+          to regenerate <code>docs/data/markets_snapshot_index.json</code>.
+        </div>`);
       return;
     }
 
-    el.innerHTML = markets.map((m, i) => {
-      const isSelected = selectorActiveMarket && (selectorActiveMarket.market_id === m.market_id);
+    const markets = listFilterAndSort();
+
+    if (countEl) {
+      const total = (selectorActiveCat === "All")
+        ? marketPool.length
+        : marketPool.filter(m => m.category === selectorActiveCat).length;
+      const matching = markets.length;
+      countEl.textContent = (selectorSearch.trim())
+        ? `${matching} / ${total} match`
+        : `${total} market${total === 1 ? "" : "s"}`;
+    }
+
+    if (markets.length === 0) {
+      el.innerHTML = "";  // ::empty pseudo-element handles the empty state
+      return;
+    }
+
+    const frag = document.createDocumentFragment();
+    for (const m of markets) {
+      const isSelected = selectorActiveMarket
+        && selectorActiveMarket.market_id === m.market_id;
       const isYes = m.resolved_yes === 1;
-      const wrong = (isYes && m.final_yes_price < 0.5) || (!isYes && m.final_yes_price > 0.5);
+      const snapPrice = getMarketSnapPrice(m, selectorActiveSnap);
+      const hasSnap = snapPrice !== null;
+      const displayPrice = (hasSnap)
+        ? snapPrice
+        : (m.final_yes_price ?? null);
+      const pricePct = (displayPrice == null)
+        ? "—"
+        : (displayPrice * 100).toFixed(0) + "%";
+      const wrong = (displayPrice != null) &&
+        ((isYes && displayPrice < 0.5) || (!isYes && displayPrice > 0.5));
       const priceColor = wrong ? "var(--red)" : "var(--green)";
-      return `
-        <div class="selector-market-row ${isSelected ? 'selected' : ''}" data-idx="${i}">
-          <span class="selector-market-question">${m.question}</span>
-          <span class="selector-market-outcome" style="color:${priceColor}">
-            ${(m.final_yes_price * 100).toFixed(0)}% &rarr; ${isYes ? "YES" : "NO"}
-          </span>
+      const catColor = COLORS[m.category] || "var(--text-dim)";
+
+      const row = document.createElement("div");
+      row.className = "selector-market-row"
+        + (isSelected ? " selected" : "")
+        + (hasSnap ? "" : " no-snap");
+
+      row.innerHTML = `
+        <div class="selector-market-main">
+          <div class="selector-market-question">${escapeHtml(m.question || "(no question)")}</div>
+          <div class="selector-market-meta">
+            <span class="selector-market-cat-chip" style="background:${catColor};">${m.category || ""}</span>
+            <span>${formatEndDate(m.end_date)}</span>
+            ${(m.volume != null) ? `<span>vol $${shortNum(m.volume)}</span>` : ""}
+          </div>
+        </div>
+        <div class="selector-market-outcome" style="color:${priceColor}">
+          <span class="now-price">${pricePct}</span>
+          <span class="resolved-tag">${isYes ? "→ YES" : "→ NO"}</span>
         </div>
       `;
-    }).join("");
-
-    el.querySelectorAll(".selector-market-row").forEach((row, i) => {
       row.addEventListener("click", () => {
-        const m = markets[i];
-        if (selectorActiveMarket && selectorActiveMarket.market_id === m.market_id) {
+        if (selectorActiveMarket
+            && selectorActiveMarket.market_id === m.market_id) {
           selectorActiveMarket = null;
         } else {
           selectorActiveMarket = m;
         }
-        renderCategorySelector();
+        renderSelectorChart();
+        renderSelectorMarketList();
       });
-    });
+      frag.appendChild(row);
+    }
+    el.innerHTML = "";
+    el.appendChild(frag);
   }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;",
+         '"': "&quot;", "'": "&#39;" })[c]);
+  }
+  function formatEndDate(s) {
+    if (!s) return "—";
+    const d = new Date(s);
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleDateString(undefined,
+      { year: "numeric", month: "short" });
+  }
+  function shortNum(n) {
+    if (n == null) return "—";
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
+    if (n >= 1e3) return (n / 1e3).toFixed(0) + "k";
+    return Math.round(n).toString();
+  }
+
+  // Top-level orchestrator: re-render every dependent piece. Called on
+  // any state change (snapshot dial, category toggle, market click,
+  // search input, sort change).
+  function renderSelector() {
+    renderSnapshotDial();
+    renderCategoryToggles();
+    renderSelectorDescription();
+    renderSelectorChart();
+    renderSelectorMarketList();
+  }
+
+  function wireSelectorPickerControls() {
+    const searchEl = document.getElementById("selector-market-search");
+    const sortEl   = document.getElementById("selector-market-sort");
+    if (searchEl) {
+      let to;
+      searchEl.addEventListener("input", e => {
+        clearTimeout(to);
+        to = setTimeout(() => {
+          selectorSearch = e.target.value;
+          renderSelectorMarketList();
+        }, 80);
+      });
+    }
+    if (sortEl) {
+      sortEl.value = selectorSort;
+      sortEl.addEventListener("change", e => {
+        selectorSort = e.target.value;
+        renderSelectorMarketList();
+      });
+    }
+  }
+
+  function renderCategorySelector() { renderSelector(); }  // legacy alias for resize handler
 
   // ── BSS Dynamics line chart ──
   const dynamicsCategories = Object.keys(dynamicsCategoryData.categories);
@@ -1906,7 +2330,8 @@ footer a:hover { text-decoration: underline; }
   updateTimeline("tl-open");
   initCalibrationChart();
   updateCalibration("cal-overall");
-  renderCategorySelector();
+  wireSelectorPickerControls();
+  renderSelector();
   renderDynamicsToggles();
   // Dynamics chart is drawn lazily on first scroll into view (so the
   // stagger animation plays as the user reaches it). Render now if it's
