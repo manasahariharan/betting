@@ -1,18 +1,84 @@
 {
-  "generated": "2026-05-10T08:02:30.127911+00:00",
+  "generated": "2026-05-11T03:21:32.498965+00:00",
   "description": "Top 15 markets priced <= 0.1 that resolved YES. Sorted ascending by final price (most surprising first).",
-  "n_eligible": 1,
+  "n_eligible": 7,
   "markets": [
     {
-      "market_id": "507545",
-      "question": "Matt Gaetz out as Congressman in 2024?",
-      "slug": "matt-gaetz-out-as-congressman-in-2024",
-      "url": "https://polymarket.com/event/matt-gaetz-out-as-congressman-in-2024",
-      "category": "Politics",
-      "volume": 234865.82,
-      "final_yes_price": 0.034,
+      "market_id": "2179356",
+      "question": "Will the highest temperature in Beijing be 22\u00b0C or below on May 9?",
+      "slug": "highest-temperature-in-beijing-on-may-9-2026-22corbelow",
+      "url": "https://polymarket.com/event/highest-temperature-in-beijing-on-may-9-2026-22corbelow",
+      "category": "Science",
+      "volume": 18063.64,
+      "final_yes_price": 0.0065,
       "resolved_yes": 1,
-      "end_date": "2024-12-31T12:00:00Z"
+      "end_date": "2026-05-09T12:00:00Z"
+    },
+    {
+      "market_id": "2179173",
+      "question": "Will the highest temperature in Atlanta be between 70-71\u00b0F on May 9?",
+      "slug": "highest-temperature-in-atlanta-on-may-9-2026-70-71f",
+      "url": "https://polymarket.com/event/highest-temperature-in-atlanta-on-may-9-2026-70-71f",
+      "category": "Science",
+      "volume": 12311.66,
+      "final_yes_price": 0.028,
+      "resolved_yes": 1,
+      "end_date": "2026-05-09T12:00:00Z"
+    },
+    {
+      "market_id": "2179432",
+      "question": "Will the highest temperature in Houston be 90\u00b0F or higher on May 9?",
+      "slug": "highest-temperature-in-houston-on-may-9-2026-90forhigher",
+      "url": "https://polymarket.com/event/highest-temperature-in-houston-on-may-9-2026-90forhigher",
+      "category": "Science",
+      "volume": 17157.2,
+      "final_yes_price": 0.0525,
+      "resolved_yes": 1,
+      "end_date": "2026-05-09T12:00:00Z"
+    },
+    {
+      "market_id": "2186779",
+      "question": "Will the highest temperature in Tokyo be 25\u00b0C or higher on May 10?",
+      "slug": "highest-temperature-in-tokyo-on-may-10-2026-25corhigher",
+      "url": "https://polymarket.com/event/highest-temperature-in-tokyo-on-may-10-2026-25corhigher",
+      "category": "Science",
+      "volume": 60482.94,
+      "final_yes_price": 0.055,
+      "resolved_yes": 1,
+      "end_date": "2026-05-10T12:00:00Z"
+    },
+    {
+      "market_id": "2179134",
+      "question": "Will the highest temperature in Toronto be 16\u00b0C on May 9?",
+      "slug": "highest-temperature-in-toronto-on-may-9-2026-16c",
+      "url": "https://polymarket.com/event/highest-temperature-in-toronto-on-may-9-2026-16c",
+      "category": "Science",
+      "volume": 21281.74,
+      "final_yes_price": 0.06,
+      "resolved_yes": 1,
+      "end_date": "2026-05-09T12:00:00Z"
+    },
+    {
+      "market_id": "2167389",
+      "question": "Will AVS Futebol win on 2026-05-10?",
+      "slug": "por-avs-por-2026-05-10-avs",
+      "url": "https://polymarket.com/event/por-avs-por-2026-05-10-avs",
+      "category": "Sports",
+      "volume": 104607.45,
+      "final_yes_price": 0.065,
+      "resolved_yes": 1,
+      "end_date": "2026-05-10T17:00:00Z"
+    },
+    {
+      "market_id": "2186734",
+      "question": "Will the highest temperature in Wellington be 19\u00b0C on May 10?",
+      "slug": "highest-temperature-in-wellington-on-may-10-2026-19c",
+      "url": "https://polymarket.com/event/highest-temperature-in-wellington-on-may-10-2026-19c",
+      "category": "Science",
+      "volume": 20680.12,
+      "final_yes_price": 0.075,
+      "resolved_yes": 1,
+      "end_date": "2026-05-10T12:00:00Z"
     }
   ]
 }

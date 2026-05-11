@@ -664,8 +664,9 @@ footer a:hover { text-decoration: underline; }
   <div>
     <h1>How Crowds Get Probability Wrong</h1>
     <p class="subtitle">
-      We analyzed <strong>806 resolved Polymarket markets</strong> to test whether prediction market
-      prices behave like well-calibrated probabilities&mdash;and where they break down.
+      We analyzed <strong>1,998 resolved Polymarket markets</strong> from the last 30 days
+      to test whether prediction market prices behave like well-calibrated probabilities&mdash;
+      and where they break down.
     </p>
     <div class="hero-stats" id="hero-stats"></div>
   </div>
@@ -746,7 +747,7 @@ footer a:hover { text-decoration: underline; }
         <p>
           When Polymarket says &ldquo;72% chance,&rdquo; does that really happen 72% of the time?
           This is the question of <strong>calibration</strong>&mdash;and it's what we set out
-          to test across 806 markets.
+          to test across nearly 2,000 recently-resolved markets.
         </p>
       </div>
     </div>
@@ -781,48 +782,54 @@ footer a:hover { text-decoration: underline; }
   <div class="scrolly__steps">
     <div class="scrolly__step" data-step="cal-overall">
       <div class="step-content">
-        <h3>Overall: reasonably well-calibrated</h3>
+        <h3>Overall: only marginally better than chance</h3>
         <p>
-          Across all 806 markets, Polymarket prices track actual outcomes fairly well.
-          The Brier Skill Score is <span class="metric"><span class="metric-label">BSS</span> 0.62</span>,
-          meaning the crowd outperforms a naive baseline by 62%.
+          Across all 1,998 markets in our 30-day window, Polymarket prices beat a naive base-rate
+          baseline by just <span class="metric"><span class="metric-label">BSS</span> 0.18</span>.
+          The curve hugs the diagonal at the extremes but smears badly through the middle.
         </p>
-        <p>But the curve hints at something interesting in the middle range&hellip;</p>
+        <p>
+          This is a much weaker signal than a politics-heavy historical sample would show&mdash;the
+          recent window is dominated by short, sports- and crypto-driven micro-markets that resolve
+          close to a 50/50 base rate.
+        </p>
       </div>
     </div>
     <div class="scrolly__step" data-step="cal-early">
       <div class="step-content">
-        <h3>Early in a market's life: noisy and uncertain</h3>
+        <h3>Early in a market's life: even noisier</h3>
         <p>
-          At <span class="highlight">10% of market lifetime elapsed</span>, calibration is rougher.
-          <span class="metric"><span class="metric-label">BSS</span> 0.46</span>&mdash;still better than
-          guessing, but prices bounce around the diagonal with less precision.
+          At <span class="highlight">10% of market lifetime elapsed</span>,
+          <span class="metric"><span class="metric-label">BSS</span> 0.14</span>&mdash;barely above the
+          base-rate baseline. Many markets haven't even started trading actively yet.
         </p>
         <p>Information is sparse early on. The crowd is making its best guess with limited data.</p>
       </div>
     </div>
     <div class="scrolly__step" data-step="cal-mid">
       <div class="step-content">
-        <h3>Midlife: improving, but mid-range prices are compressed</h3>
+        <h3>Midlife: tails are inward of the diagonal</h3>
         <p>
           At <span class="highlight">50% elapsed</span>,
-          <span class="metric"><span class="metric-label">BSS</span> 0.58</span>.
-          The curve tightens at the extremes but shows compression in the 30&ndash;60% range&mdash;prices
-          cluster around 50% even when outcomes diverge.
+          <span class="metric"><span class="metric-label">BSS</span> 0.18</span>.
+          The log-odds calibration slope is <span class="highlight-orange">0.87</span>&mdash;below 1.
+          The crowd's extreme prices are mildly <em>too extreme</em>: longshots resolve YES a little
+          more often than the price suggested, favorites a little less often.
         </p>
-        <p>This pattern is consistent with <strong>underconfidence</strong>: the crowd hedges toward the middle.</p>
+        <p>This is the opposite direction of the classic underconfidence story&mdash;a sign that
+          short-duration markets are more prone to <strong>mild overconfidence</strong> at the tails.</p>
       </div>
     </div>
     <div class="scrolly__step" data-step="cal-late">
       <div class="step-content">
-        <h3>Near resolution: sharp and decisive</h3>
+        <h3>Near resolution: improving, but only slightly</h3>
         <p>
           At <span class="highlight">90% elapsed</span>,
-          <span class="metric"><span class="metric-label">BSS</span> 0.68</span>.
-          The calibration curve snaps to the diagonal. Markets are pulling apart&mdash;winners go high,
-          losers go low.
+          <span class="metric"><span class="metric-label">BSS</span> 0.21</span>. The curve sharpens
+          a bit, but the gain across the whole lifetime is only +0.08 BSS&mdash;a much flatter
+          trajectory than the politics-heavy historical samples show.
         </p>
-        <p>By the end, prices converge on truth. The crowd figures it out&mdash;eventually.</p>
+        <p>Most of these markets are short-duration; there's just not much time for new information to arrive.</p>
       </div>
     </div>
     <div class="scrolly__step" data-step="cal-final">
@@ -830,12 +837,13 @@ footer a:hover { text-decoration: underline; }
         <h3>Final prices: the best the crowd ever gets</h3>
         <p>
           Using the last available trading price,
-          <span class="metric"><span class="metric-label">BSS</span> 0.73</span>.
-          The curve hugs the diagonal closely.
+          <span class="metric"><span class="metric-label">BSS</span> 0.19</span>.
+          That's <em>lower</em> than the 95%-snapshot BSS (0.22)&mdash;the very last tick is
+          settlement-contaminated for some markets and actually <em>hurts</em> calibration when
+          averaged across the dynamics-eligible 783 markets.
         </p>
         <p>
-          But this number is partly inflated&mdash;by the time of the final price, resolution information
-          has often leaked into the market. The <em>dynamics</em> tell the more honest story.
+          The <em>dynamics</em> below tell a more honest story than any single snapshot.
         </p>
       </div>
     </div>
@@ -901,19 +909,25 @@ footer a:hover { text-decoration: underline; }
     <div class="section-label">The dynamics trajectory</div>
     <h2>When Does the Crowd Get It Right?</h2>
     <p class="lead" style="max-width:720px;">
-      Brier Skill Score over each market's relative lifetime. The crowd steadily improves&mdash;but
-      the pace varies dramatically by category.
+      Brier Skill Score over each market's relative lifetime. The overall trajectory is shallow&mdash;but
+      the per-category gap is what drives it.
     </p>
     <div class="category-toggles" id="dynamics-toggles"></div>
     <div class="dynamics-chart-container">
       <div id="dynamics-line-chart"></div>
     </div>
     <p style="max-width:720px; font-size:0.9rem;">
-      <span class="highlight-orange">Sports markets</span> gain almost no accuracy over their lifetime
-      (BSS +0.08 from 10% to 95% elapsed). Information arrives at game time, not gradually&mdash;the
+      <span class="highlight-orange">Sports markets</span> dominate the sample (708 of 783
+      dynamics-eligible markets) and barely improve over their lifetime
+      (BSS 0.07 &rarr; 0.15, just +0.08). Game outcomes arrive at game time, not gradually&mdash;the
       relative-time normalisation standardises chronology, not information arrival.
-      <span class="highlight-purple">Political markets</span> show the strongest convergence (+0.30),
-      consistent with gradual information incorporation.
+      <span class="highlight-green">Longer-duration crypto markets</span> (52 markets in the
+      dynamics sample) tell a very different story: BSS climbs from 0.67 to 0.96 across lifetime.
+      These are typically &ldquo;Will X hit $Y by date&rdquo; markets where the reference price
+      gradually reveals itself.
+      <span class="highlight-purple">Politics</span> and <span class="highlight">Science</span> have
+      too few dynamics-eligible markets in this 30-day window (19 and 4 respectively, below the
+      n &ge; 20 threshold) to fit a stable trajectory.
     </p>
   </div>
 </section>
@@ -934,30 +948,54 @@ footer a:hover { text-decoration: underline; }
   <div class="wide-container">
     <h3>The longshot pattern</h3>
     <p style="max-width:720px;">
-      Of the <span class="highlight">420 markets</span> priced at 15% or below, the crowd overpriced them
-      by an average of <span class="highlight-red">1.3 percentage points</span>. That sounds tiny, but at
-      these low probabilities it means events were priced at roughly double their actual occurrence rate.
+      Of the <span class="highlight">274 markets</span> priced at 15% or below, only
+      <span class="highlight">14 resolved YES</span> (5.1%)&mdash;but the crowd's prices were
+      a little <em>too low</em> on average, by <span class="highlight-green">-1.5 percentage points</span>.
+      Longshots aren't being overpriced in this 30-day sample; if anything, they're <em>slightly
+      underpriced</em>.
     </p>
     <p style="max-width:720px;">
-      High-volume markets show almost no overpricing (<span class="highlight-green">-0.03 pp</span>),
-      suggesting informed money corrects the bias. Low-volume markets overprice longshots by
-      <span class="highlight-red">3.1 pp</span>&mdash;where attention is thin, mispricing persists.
+      The 85 favorites (priced &ge; 85%) go the other way: the crowd is <span class="highlight-red">overpricing</span>
+      them by <span class="highlight-red">+2.7 pp</span>. Combined with the longshot direction, this is
+      the signature of mild <strong>overconfidence at the tails</strong>&mdash;the calibration slope is
+      <span class="highlight-orange">0.88</span> with a CI that just barely crosses 1
+      (<span class="highlight-orange">[0.77, 0.99]</span>).
+    </p>
+    <p style="max-width:720px;">
+      Volume splits the pattern further: low-volume markets are essentially flat
+      (<span class="highlight-green">-1.0 pp</span> longshot bias), high-volume markets actually
+      <em>underprice</em> longshots more aggressively
+      (<span class="highlight-green">-2.9 pp</span>). Where there's heavier trading activity in this
+      sample, the dollars are pushing crowd prices below the eventual realisation rate.
     </p>
 
     <h3 style="margin-top:40px;">The biggest surprises</h3>
     <p style="max-width:720px;">
-      These are the markets where the final trading price was farthest from the actual outcome&mdash;the
-      crowd's most confident mistakes and most dramatic upsets.
+      These are the markets where the final trading price was farthest from the actual outcome.
+      In this 30-day window they're almost entirely <span class="highlight">weather and temperature
+      micro-markets</span>&mdash;the crowd's most confident mistakes are about whether the high in
+      Beijing or Atlanta will land in a narrow band on a given day.
     </p>
     <div class="cards-grid" id="surprise-cards"></div>
 
     <details class="methodology-note" style="margin-top:60px;">
       <summary>Methodology &amp; data notes</summary>
       <p style="margin-top:12px;">
-        <strong>Sample:</strong> 1,000 resolved binary markets drawn via stratified sampling (proportional to category)
-        from ~10,000 Polymarket markets with volume &ge; $10k. 806 markets had valid CLOB price history
-        and are included in calibration analysis. 512 markets met the additional duration (&ge; 5 days) and
-        history observation (&ge; 4 ticks) filters for dynamics analysis.
+        <strong>Sample:</strong> 2,000 resolved binary markets drawn via stratified sampling (proportional
+        to category) from a recency-windowed universe of 2,325 qualifying markets that closed in the last
+        30 days (the latest data we could pull from the Gamma API at run time). The fetcher scanned
+        20,000 raw markets sorted by <code>endDate</code> descending with
+        <code>end_date_min</code>/<code>end_date_max</code> filters; client-side filtering kept binary
+        outcomes with volume &ge; $10k that resolved to a clear YES/NO. 1,998 of the 2,000 sampled
+        markets had a usable CLOB final price. 783 markets cleared the additional duration
+        (&ge; 5 days) and history observation (&ge; 4 ticks) filters for dynamics analysis.
+      </p>
+      <p>
+        <strong>Sample composition:</strong> Sports 50%, Crypto 39%, Science 10%, Politics 1.5%.
+        Business and Pop Culture are absent from the 30-day window. This is a fundamentally
+        different population from a long-history Polymarket sample (which would be ~40% politics);
+        many of the calibration findings here reflect short-duration sports and crypto micro-markets
+        more than long-running political contests.
       </p>
       <p>
         <strong>Price source:</strong> CLOB <code>/prices-history</code> endpoint with <code>interval=max</code>,
@@ -991,14 +1029,16 @@ footer a:hover { text-decoration: underline; }
         BSS is the more reliable dynamics signal at those time points.
       </p>
       <p>
-        <strong>Explore-by-category section:</strong> Curves and BSS are read from the dynamics sample
-        (512 markets that cleared the &ge; 5 day duration and &ge; 4 tick history filters), so the
-        per-category numbers here will differ slightly from the 806-market overall calibration view in
-        the scrolly above. The market list shows all 512 markets sortable by close date, search-filtered
-        by question text. A market's overlay dot uses its most-recent CLOB tick at or before the
-        selected snapshot; if a market has no tick before that point (mainly an issue at the 10%
-        snapshot), the dot falls back to the nearest earlier snapshot and is rendered semi-transparent
-        with a tooltip note.
+        <strong>Interactive scrolly step + per-market journey:</strong> The dial + category controls
+        at the end of the scrolly drive the same sticky calibration chart that the walk-through animates,
+        reading from the dynamics sample (783 markets that cleared the &ge; 5 day duration and
+        &ge; 4 tick history filters). The per-category numbers there will differ from the 1,998-market
+        overall calibration view in the scrolly because the duration filter strips out almost all
+        short-duration sports/crypto micro-markets. Below the scrolly, the picker covers all 783
+        markets sortable by close date with a search box. Selecting a market draws its YES price across
+        the 7 snapshots (10/25/50/75/90/95/Final) as a journey chart, with a dashed reference at the
+        resolved outcome (0% if NO, 100% if YES) and the shaded area showing the gap. Snapshots with
+        no CLOB tick (mostly an issue at 10%) are gapped on the line rather than interpolated.
       </p>
       <p>
         <strong>Limitations:</strong> Market prices are not IID forecasts from a stable process. Aggregate

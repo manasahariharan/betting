@@ -130,43 +130,44 @@ def api_get(url, params=None):
 
 # ─── Step 1: Fetch population ───────────────────────────────────────────────
 
-def fetch_population(target_markets=10000, min_volume=10000):
+def _fetch_window(end_date_min_iso, end_date_max_iso,
+                  max_raw_scan, min_volume,
+                  page_limit=500):
     """
-    Fetch closed binary markets with include_tag=true and volume >= $10k.
-    Volume filter is applied client-side since the API's volume_num_min
-    is unreliable.
-    """
-    print("=" * 70)
-    print(f"STEP 1: Fetching markets (target ~{target_markets}, vol >= ${min_volume:,})")
-    print("=" * 70)
+    Fetch one window of closed markets sorted by endDate descending.
+    Returns (rows, raw_scanned). Stops when:
+      * the API returns an empty / partial batch (end of window), or
+      * raw_scanned >= max_raw_scan.
 
+    Sorting endDate desc + end_date_min/max snake_case is what the Gamma
+    API actually honours — see PLAN_DEVIATIONS_AND_PITFALLS.md #8.
+    Default offset-0 pagination without these filters returns the very
+    oldest markets, which all predate the CLOB and have no usable
+    forecast price.
+    """
     rows = []
     offset = 0
-    limit = 100
-    page = 0
     raw_scanned = 0
-
-    while len(rows) < target_markets:
+    page = 0
+    while raw_scanned < max_raw_scan:
         page += 1
-        if page % 20 == 1:
-            print(f"  Page {page} (offset={offset}, qualifying: {len(rows)}, "
-                  f"scanned: {raw_scanned})...")
-
         data = api_get(
             f"{GAMMA_API}/markets",
             params={
                 "closed": "true",
-                "limit": limit,
+                "limit": page_limit,
                 "offset": offset,
                 "include_tag": "true",
+                "end_date_min": end_date_min_iso,
+                "end_date_max": end_date_max_iso,
+                "order": "endDate",
+                "ascending": "false",
             },
         )
-
         if not data:
             break
         batch = data if isinstance(data, list) else data.get("data", [])
         if not batch:
-            print(f"  Empty batch at offset {offset}, done.")
             break
 
         for m in batch:
@@ -174,14 +175,81 @@ def fetch_population(target_markets=10000, min_volume=10000):
             row = parse_market(m)
             if row and row["volume"] >= min_volume:
                 rows.append(row)
+            if raw_scanned >= max_raw_scan:
+                break
 
-        if len(batch) < limit:
+        if page % 5 == 1:
+            print(f"  Page {page} (offset={offset}, raw_scanned={raw_scanned}, "
+                  f"qualifying={len(rows)})...")
+
+        if len(batch) < page_limit:
+            print(f"  End of window reached at offset {offset}.")
             break
-        offset += limit
-        time.sleep(0.3)
+        offset += page_limit
+        time.sleep(0.25)
+    return rows, raw_scanned
 
-    print(f"\n  Raw markets scanned: {raw_scanned}")
-    print(f"  Qualifying (binary, resolved, vol >= ${min_volume:,}): {len(rows)}")
+
+def fetch_population(
+    target_qualifying=2000,
+    max_raw_scan=20000,
+    min_volume=10000,
+    initial_window_days=30,
+    fallback_windows_days=(60, 90, 180, 365),
+):
+    """
+    Fetch closed binary markets within a recency window. Pitfalls applied:
+
+      #8: sort endDate desc with snake_case end_date_min/end_date_max
+      #4: client-side volume filter (volume_num_min is broken)
+      #9, #10: parse outcomePrices/outcomes/clobTokenIds via parse_market
+        (which handles include_tag-derived tags)
+
+    Window-extension rule (Q1 from the PR review):
+      Try `initial_window_days` first. If the qualifying pool is below
+      `target_qualifying`, expand the window through `fallback_windows_days`
+      until the pool clears the target or the widest window is reached.
+      In our 2026 probe, 30d already yields ~2.3k qualifying so the
+      fallback rarely fires — but it's here as a safety net for sparser
+      future periods.
+
+    Returns (df, window_used_days, raw_scanned).
+    """
+    from datetime import timedelta
+    print("=" * 70)
+    print(f"STEP 1: Fetching recent markets (target_qualifying="
+          f"{target_qualifying}, max_raw_scan={max_raw_scan}, "
+          f"vol>=${min_volume:,})")
+    print("=" * 70)
+
+    now = datetime.now(timezone.utc)
+    end_date_max_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    rows = []
+    window_used = None
+    last_raw_scanned = 0
+    for window_days in (initial_window_days, *fallback_windows_days):
+        end_date_min_iso = (
+            now - timedelta(days=window_days)
+        ).strftime("%Y-%m-%dT%H:%M:%SZ")
+        print(f"\n  Trying window: last {window_days} days "
+              f"({end_date_min_iso} -> {end_date_max_iso})")
+
+        rows, last_raw_scanned = _fetch_window(
+            end_date_min_iso, end_date_max_iso,
+            max_raw_scan, min_volume,
+        )
+        print(f"  -> raw_scanned={last_raw_scanned}, "
+              f"qualifying={len(rows)}")
+        if len(rows) >= target_qualifying:
+            window_used = window_days
+            print(f"  Window {window_days}d hit target "
+                  f"({len(rows)} >= {target_qualifying}); using it.")
+            break
+    else:
+        window_used = (initial_window_days, *fallback_windows_days)[-1]
+        print(f"  All windows exhausted; using widest "
+              f"({window_used}d, qualifying={len(rows)}).")
 
     df = pd.DataFrame(rows)
     if df.empty:
@@ -189,10 +257,15 @@ def fetch_population(target_markets=10000, min_volume=10000):
         sys.exit(1)
 
     cats = df["category"].value_counts()
-    print(f"\n  Category distribution:")
+    print(f"\n  Window: {window_used} days · "
+          f"raw_scanned: {last_raw_scanned} · "
+          f"qualifying: {len(df)}")
+    print(f"  Category distribution:")
     for cat, n in cats.items():
         print(f"    {cat:20s}: {n:5d} ({n/len(df)*100:.1f}%)")
 
+    df.attrs["window_days"] = window_used
+    df.attrs["raw_scanned"] = last_raw_scanned
     return df
 
 
@@ -490,8 +563,17 @@ def main():
     t0 = datetime.now(timezone.utc)
     print(f"  Started: {t0.isoformat()}")
 
-    df = fetch_population(target_markets=10000, min_volume=10000)
-    sample, sanity = stratified_sample(df, target_n=1000)
+    df = fetch_population(
+        target_qualifying=2000,
+        max_raw_scan=20000,
+        min_volume=10000,
+        initial_window_days=30,
+    )
+    sample, sanity = stratified_sample(df, target_n=2000)
+    # Carry the recency-window metadata through to the JSON output so
+    # the docs/index.html can show "last 3 days · ~2.3k qualifying".
+    sanity["fetch_window_days"] = df.attrs.get("window_days")
+    sanity["raw_scanned"] = df.attrs.get("raw_scanned")
     sample = fetch_clob_prices(sample)
     cal = run_calibration(sample)
     cats = run_category_calibration(sample)

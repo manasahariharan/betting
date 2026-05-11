@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-10T08:02:30.125890+00:00",
+  "generated": "2026-05-11T03:21:32.496982+00:00",
   "source": "Analysis 1 output: data/markets_clean.csv (stratified sample of resolved Polymarket markets, final_yes_price = CLOB second-to-last 12hr tick)",
   "methodology": {
     "longshot_threshold": 0.15,
@@ -24,30 +24,30 @@
     ]
   },
   "full_sample": {
-    "n_markets": 806,
-    "n_resolved_yes": 244,
-    "base_rate": 0.30273,
-    "mean_overpricing_pp": 0.1913,
+    "n_markets": 1998,
+    "n_resolved_yes": 903,
+    "base_rate": 0.45195,
+    "mean_overpricing_pp": -1.2019,
     "log_odds": {
-      "slope": 1.35023,
-      "intercept": 0.01459,
-      "slope_ci_lower": 1.18118,
-      "slope_ci_upper": 1.5907,
-      "intercept_ci_lower": -0.26711,
-      "intercept_ci_upper": 0.28749,
-      "p_slope_lt_1": 0.0,
+      "slope": 0.87624,
+      "intercept": 0.0429,
+      "slope_ci_lower": 0.77379,
+      "slope_ci_upper": 0.99346,
+      "intercept_ci_lower": -0.05079,
+      "intercept_ci_upper": 0.13491,
+      "p_slope_lt_1": 0.984,
       "n_bootstrap": 500,
       "stratified": false,
       "ci_wide": false
     },
     "log_odds_stratified": {
-      "slope": 1.35023,
-      "intercept": 0.01459,
-      "slope_ci_lower": 1.18006,
-      "slope_ci_upper": 1.6172,
-      "intercept_ci_lower": -0.23582,
-      "intercept_ci_upper": 0.26855,
-      "p_slope_lt_1": 0.0,
+      "slope": 0.87624,
+      "intercept": 0.0429,
+      "slope_ci_lower": 0.77643,
+      "slope_ci_upper": 0.99615,
+      "intercept_ci_lower": -0.05574,
+      "intercept_ci_upper": 0.14737,
+      "p_slope_lt_1": 0.986,
       "n_bootstrap": 500,
       "stratified": true,
       "ci_wide": false
@@ -55,131 +55,131 @@
   },
   "longshots": {
     "definition": "final_yes_price <= 0.15",
-    "n_markets": 420,
-    "n_resolved_yes": 3,
-    "base_rate": 0.00714,
-    "mean_overpricing_pp": 1.3001,
+    "n_markets": 274,
+    "n_resolved_yes": 14,
+    "base_rate": 0.05109,
+    "mean_overpricing_pp": -1.502,
     "log_odds": {
-      "slope": null,
-      "intercept": null,
-      "slope_ci_lower": null,
-      "slope_ci_upper": null,
-      "intercept_ci_lower": null,
-      "intercept_ci_upper": null,
-      "p_slope_lt_1": null,
-      "n_bootstrap": 0,
+      "slope": 1.10218,
+      "intercept": 0.54541,
+      "slope_ci_lower": 0.64472,
+      "slope_ci_upper": 1.73442,
+      "intercept_ci_lower": -1.02584,
+      "intercept_ci_upper": 2.15356,
+      "p_slope_lt_1": 0.316,
+      "n_bootstrap": 500,
       "stratified": false,
-      "warning": "minority-class share below 5% \u2014 logistic MLE is unstable / diverges; slope omitted (use mean overpricing pp instead)"
+      "ci_wide": false
     },
     "calibration_buckets": [
       {
         "bin_lower": 0.0,
         "bin_upper": 0.01,
         "bin_center": 0.005,
-        "mean_predicted": 0.00269,
-        "mean_actual": 0.0,
-        "n": 276
+        "mean_predicted": 0.00284,
+        "mean_actual": 0.00694,
+        "n": 144
       },
       {
         "bin_lower": 0.01,
         "bin_upper": 0.02,
         "bin_center": 0.015,
-        "mean_predicted": 0.01368,
+        "mean_predicted": 0.01298,
         "mean_actual": 0.0,
-        "n": 46
+        "n": 20
       },
       {
         "bin_lower": 0.02,
         "bin_upper": 0.03,
         "bin_center": 0.025,
-        "mean_predicted": 0.02378,
-        "mean_actual": 0.0,
-        "n": 16
+        "mean_predicted": 0.02504,
+        "mean_actual": 0.07692,
+        "n": 13
       },
       {
         "bin_lower": 0.03,
         "bin_upper": 0.05,
         "bin_center": 0.04,
-        "mean_predicted": 0.03682,
-        "mean_actual": 0.04545,
-        "n": 22
+        "mean_predicted": 0.03761,
+        "mean_actual": 0.0,
+        "n": 19
       },
       {
         "bin_lower": 0.05,
         "bin_upper": 0.07,
         "bin_center": 0.06,
-        "mean_predicted": 0.05862,
-        "mean_actual": 0.0,
-        "n": 17
+        "mean_predicted": 0.05655,
+        "mean_actual": 0.21053,
+        "n": 19
       },
       {
         "bin_lower": 0.07,
         "bin_upper": 0.1,
         "bin_center": 0.085,
-        "mean_predicted": 0.08588,
-        "mean_actual": 0.0,
-        "n": 13
+        "mean_predicted": 0.0807,
+        "mean_actual": 0.1,
+        "n": 10
       },
       {
         "bin_lower": 0.1,
         "bin_upper": 0.15,
         "bin_center": 0.125,
-        "mean_predicted": 0.12613,
-        "mean_actual": 0.06667,
-        "n": 30
+        "mean_predicted": 0.12845,
+        "mean_actual": 0.14286,
+        "n": 49
       }
     ]
   },
   "favorites": {
     "definition": "final_yes_price >= 0.85",
-    "n_markets": 94,
-    "n_resolved_yes": 93,
-    "base_rate": 0.98936,
-    "mean_overpricing_pp": -2.6351,
+    "n_markets": 85,
+    "n_resolved_yes": 80,
+    "base_rate": 0.94118,
+    "mean_overpricing_pp": 2.6694,
     "log_odds": {
-      "slope": null,
-      "intercept": null,
-      "slope_ci_lower": null,
-      "slope_ci_upper": null,
-      "intercept_ci_lower": null,
-      "intercept_ci_upper": null,
-      "p_slope_lt_1": null,
-      "n_bootstrap": 0,
+      "slope": 1.96859,
+      "intercept": -2.80238,
+      "slope_ci_lower": 1.29619,
+      "slope_ci_upper": 5.98804,
+      "intercept_ci_lower": -10.49419,
+      "intercept_ci_upper": -0.38189,
+      "p_slope_lt_1": 0.0,
+      "n_bootstrap": 496,
       "stratified": false,
-      "warning": "minority-class share below 5% \u2014 logistic MLE is unstable / diverges; slope omitted (use mean overpricing pp instead)"
+      "ci_wide": true
     },
     "calibration_buckets": [
       {
         "bin_lower": 0.85,
         "bin_upper": 0.9,
         "bin_center": 0.875,
-        "mean_predicted": 0.87809,
-        "mean_actual": 0.90909,
-        "n": 11
+        "mean_predicted": 0.87536,
+        "mean_actual": 0.78571,
+        "n": 14
       },
       {
         "bin_lower": 0.9,
         "bin_upper": 0.93,
         "bin_center": 0.915,
-        "mean_predicted": 0.9155,
-        "mean_actual": 1.0,
-        "n": 10
+        "mean_predicted": 0.91142,
+        "mean_actual": 0.66667,
+        "n": 6
       },
       {
         "bin_lower": 0.93,
         "bin_upper": 0.95,
         "bin_center": 0.94,
-        "mean_predicted": 0.94075,
+        "mean_predicted": 0.94167,
         "mean_actual": 1.0,
-        "n": 6
+        "n": 3
       },
       {
         "bin_lower": 0.95,
         "bin_upper": 0.97,
         "bin_center": 0.96,
-        "mean_predicted": 0.95891,
+        "mean_predicted": 0.95775,
         "mean_actual": 1.0,
-        "n": 11
+        "n": 4
       },
       {
         "bin_lower": 0.97,
@@ -187,23 +187,23 @@
         "bin_center": 0.975,
         "mean_predicted": 0.9755,
         "mean_actual": 1.0,
-        "n": 5
+        "n": 1
       },
       {
         "bin_lower": 0.98,
         "bin_upper": 0.99,
         "bin_center": 0.985,
-        "mean_predicted": 0.98593,
+        "mean_predicted": 0.9895,
         "mean_actual": 1.0,
-        "n": 15
+        "n": 1
       },
       {
         "bin_lower": 0.99,
         "bin_upper": 1.0,
         "bin_center": 0.995,
-        "mean_predicted": 0.99583,
+        "mean_predicted": 0.99865,
         "mean_actual": 1.0,
-        "n": 36
+        "n": 56
       }
     ]
   }
