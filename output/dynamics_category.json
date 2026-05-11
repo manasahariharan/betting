@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-10T08:32:18.194488+00:00",
+  "generated": "2026-05-11T00:35:00.836750+00:00",
   "source": "Analysis 1 stratified sample (data/markets_clean.csv) + CLOB price history fetched per market and cached to data/raw_history/{market_id}.json",
   "methodology": {
     "snapshot_pcts": [
@@ -1167,6 +1167,196 @@
             }
           ]
         }
+      },
+      "final_price": {
+        "label": "Crypto_final",
+        "n_markets": 41,
+        "n_resolved_yes": 12,
+        "base_rate": 0.29268,
+        "brier_score": 0.028031,
+        "brier_score_baseline": 0.20702,
+        "bss": 0.864597,
+        "log_odds": {
+          "slope": 3.74925,
+          "intercept": -2.72878,
+          "slope_ci_lower": 1.82875,
+          "slope_ci_upper": 143.9106,
+          "intercept_ci_lower": -167.82742,
+          "intercept_ci_upper": 3.27123,
+          "p_slope_lt_1": 0.0,
+          "n_bootstrap": 500,
+          "stratified": false,
+          "ci_wide": true
+        },
+        "mean_overpricing_pp": 0.1732,
+        "longshot": {
+          "definition": "snapshot_price <= 0.15",
+          "n_markets": 27,
+          "n_resolved_yes": 0,
+          "mean_overpricing_pp": 1.0222
+        },
+        "calibration_buckets": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.05,
+            "bin_center": 0.025,
+            "mean_predicted": 0.00696,
+            "mean_actual": 0.0,
+            "n": 26
+          },
+          {
+            "bin_lower": 0.05,
+            "bin_upper": 0.1,
+            "bin_center": 0.075,
+            "mean_predicted": 0.095,
+            "mean_actual": 0.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.15,
+            "bin_center": 0.125,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.15,
+            "bin_upper": 0.2,
+            "bin_center": 0.175,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.25,
+            "bin_center": 0.225,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.25,
+            "bin_upper": 0.3,
+            "bin_center": 0.275,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.35,
+            "bin_center": 0.325,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.35,
+            "bin_upper": 0.4,
+            "bin_center": 0.375,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.45,
+            "bin_center": 0.425,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.45,
+            "bin_upper": 0.5,
+            "bin_center": 0.475,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.55,
+            "bin_center": 0.525,
+            "mean_predicted": 0.511,
+            "mean_actual": 0.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.55,
+            "bin_upper": 0.6,
+            "bin_center": 0.575,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.65,
+            "bin_center": 0.625,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.65,
+            "bin_upper": 0.7,
+            "bin_center": 0.675,
+            "mean_predicted": 0.69,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.75,
+            "bin_center": 0.725,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.75,
+            "bin_upper": 0.8,
+            "bin_center": 0.775,
+            "mean_predicted": 0.76,
+            "mean_actual": 0.66667,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.85,
+            "bin_center": 0.825,
+            "mean_predicted": 0.81425,
+            "mean_actual": 1.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.85,
+            "bin_upper": 0.9,
+            "bin_center": 0.875,
+            "mean_predicted": 0.8875,
+            "mean_actual": 1.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 0.95,
+            "bin_center": 0.925,
+            "mean_predicted": 0.95,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.95,
+            "bin_upper": 1.0,
+            "bin_center": 0.975,
+            "mean_predicted": 0.99013,
+            "mean_actual": 1.0,
+            "n": 4
+          }
+        ]
       }
     },
     "Other": {
@@ -2312,6 +2502,196 @@
             }
           ]
         }
+      },
+      "final_price": {
+        "label": "Other_final",
+        "n_markets": 47,
+        "n_resolved_yes": 19,
+        "base_rate": 0.40426,
+        "brier_score": 0.083893,
+        "brier_score_baseline": 0.240833,
+        "bss": 0.651657,
+        "log_odds": {
+          "slope": 45.58938,
+          "intercept": 0.15297,
+          "slope_ci_lower": 5.49755,
+          "slope_ci_upper": 65.55066,
+          "intercept_ci_lower": -0.95146,
+          "intercept_ci_upper": 1.50528,
+          "p_slope_lt_1": 0.0,
+          "n_bootstrap": 500,
+          "stratified": false,
+          "ci_wide": true
+        },
+        "mean_overpricing_pp": -2.3553,
+        "longshot": {
+          "definition": "snapshot_price <= 0.15",
+          "n_markets": 21,
+          "n_resolved_yes": 0,
+          "mean_overpricing_pp": 2.4595
+        },
+        "calibration_buckets": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.05,
+            "bin_center": 0.025,
+            "mean_predicted": 0.00867,
+            "mean_actual": 0.0,
+            "n": 18
+          },
+          {
+            "bin_lower": 0.05,
+            "bin_upper": 0.1,
+            "bin_center": 0.075,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.15,
+            "bin_center": 0.125,
+            "mean_predicted": 0.12017,
+            "mean_actual": 0.0,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.15,
+            "bin_upper": 0.2,
+            "bin_center": 0.175,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.25,
+            "bin_center": 0.225,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.25,
+            "bin_upper": 0.3,
+            "bin_center": 0.275,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.35,
+            "bin_center": 0.325,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.35,
+            "bin_upper": 0.4,
+            "bin_center": 0.375,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.45,
+            "bin_center": 0.425,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.45,
+            "bin_upper": 0.5,
+            "bin_center": 0.475,
+            "mean_predicted": 0.465,
+            "mean_actual": 0.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.55,
+            "bin_center": 0.525,
+            "mean_predicted": 0.5,
+            "mean_actual": 0.53846,
+            "n": 13
+          },
+          {
+            "bin_lower": 0.55,
+            "bin_upper": 0.6,
+            "bin_center": 0.575,
+            "mean_predicted": 0.55,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.65,
+            "bin_center": 0.625,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.65,
+            "bin_upper": 0.7,
+            "bin_center": 0.675,
+            "mean_predicted": 0.68,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.75,
+            "bin_center": 0.725,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.75,
+            "bin_upper": 0.8,
+            "bin_center": 0.775,
+            "mean_predicted": 0.79,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.85,
+            "bin_center": 0.825,
+            "mean_predicted": 0.82925,
+            "mean_actual": 1.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.85,
+            "bin_upper": 0.9,
+            "bin_center": 0.875,
+            "mean_predicted": 0.885,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 0.95,
+            "bin_center": 0.925,
+            "mean_predicted": 0.911,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.95,
+            "bin_upper": 1.0,
+            "bin_center": 0.975,
+            "mean_predicted": 0.9874,
+            "mean_actual": 1.0,
+            "n": 5
+          }
+        ]
       }
     },
     "Politics": {
@@ -3457,6 +3837,196 @@
             }
           ]
         }
+      },
+      "final_price": {
+        "label": "Politics_final",
+        "n_markets": 236,
+        "n_resolved_yes": 57,
+        "base_rate": 0.24153,
+        "brier_score": 0.039792,
+        "brier_score_baseline": 0.183191,
+        "bss": 0.782786,
+        "log_odds": {
+          "slope": 1.46333,
+          "intercept": 0.1401,
+          "slope_ci_lower": 1.09708,
+          "slope_ci_upper": 2.80832,
+          "intercept_ci_lower": -0.5506,
+          "intercept_ci_upper": 0.90347,
+          "p_slope_lt_1": 0.002,
+          "n_bootstrap": 500,
+          "stratified": false,
+          "ci_wide": false
+        },
+        "mean_overpricing_pp": -0.0335,
+        "longshot": {
+          "definition": "snapshot_price <= 0.15",
+          "n_markets": 158,
+          "n_resolved_yes": 2,
+          "mean_overpricing_pp": 0.318
+        },
+        "calibration_buckets": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.05,
+            "bin_center": 0.025,
+            "mean_predicted": 0.00758,
+            "mean_actual": 0.00694,
+            "n": 144
+          },
+          {
+            "bin_lower": 0.05,
+            "bin_upper": 0.1,
+            "bin_center": 0.075,
+            "mean_predicted": 0.06617,
+            "mean_actual": 0.0,
+            "n": 6
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.15,
+            "bin_center": 0.125,
+            "mean_predicted": 0.12675,
+            "mean_actual": 0.125,
+            "n": 8
+          },
+          {
+            "bin_lower": 0.15,
+            "bin_upper": 0.2,
+            "bin_center": 0.175,
+            "mean_predicted": 0.165,
+            "mean_actual": 0.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.25,
+            "bin_center": 0.225,
+            "mean_predicted": 0.22333,
+            "mean_actual": 0.0,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.25,
+            "bin_upper": 0.3,
+            "bin_center": 0.275,
+            "mean_predicted": 0.28167,
+            "mean_actual": 0.33333,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.35,
+            "bin_center": 0.325,
+            "mean_predicted": 0.315,
+            "mean_actual": 0.0,
+            "n": 4
+          },
+          {
+            "bin_lower": 0.35,
+            "bin_upper": 0.4,
+            "bin_center": 0.375,
+            "mean_predicted": 0.371,
+            "mean_actual": 0.2,
+            "n": 5
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.45,
+            "bin_center": 0.425,
+            "mean_predicted": 0.4264,
+            "mean_actual": 0.2,
+            "n": 5
+          },
+          {
+            "bin_lower": 0.45,
+            "bin_upper": 0.5,
+            "bin_center": 0.475,
+            "mean_predicted": 0.48175,
+            "mean_actual": 1.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.55,
+            "bin_center": 0.525,
+            "mean_predicted": 0.51487,
+            "mean_actual": 1.0,
+            "n": 4
+          },
+          {
+            "bin_lower": 0.55,
+            "bin_upper": 0.6,
+            "bin_center": 0.575,
+            "mean_predicted": 0.56833,
+            "mean_actual": 0.33333,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.65,
+            "bin_center": 0.625,
+            "mean_predicted": 0.64,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.65,
+            "bin_upper": 0.7,
+            "bin_center": 0.675,
+            "mean_predicted": 0.66883,
+            "mean_actual": 0.66667,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.75,
+            "bin_center": 0.725,
+            "mean_predicted": 0.73,
+            "mean_actual": 1.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.75,
+            "bin_upper": 0.8,
+            "bin_center": 0.775,
+            "mean_predicted": 0.774,
+            "mean_actual": 0.8,
+            "n": 5
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.85,
+            "bin_center": 0.825,
+            "mean_predicted": 0.8175,
+            "mean_actual": 1.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.85,
+            "bin_upper": 0.9,
+            "bin_center": 0.875,
+            "mean_predicted": 0.88633,
+            "mean_actual": 1.0,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 0.95,
+            "bin_center": 0.925,
+            "mean_predicted": 0.9319,
+            "mean_actual": 1.0,
+            "n": 5
+          },
+          {
+            "bin_lower": 0.95,
+            "bin_upper": 1.0,
+            "bin_center": 0.975,
+            "mean_predicted": 0.98725,
+            "mean_actual": 1.0,
+            "n": 26
+          }
+        ]
       }
     },
     "Pop Culture": {
@@ -4417,6 +4987,196 @@
             }
           ]
         }
+      },
+      "final_price": {
+        "label": "Pop Culture_final",
+        "n_markets": 20,
+        "n_resolved_yes": 0,
+        "base_rate": 0.0,
+        "brier_score": 0.044232,
+        "brier_score_baseline": 0.0,
+        "bss": null,
+        "log_odds": {
+          "slope": null,
+          "intercept": null,
+          "slope_ci_lower": null,
+          "slope_ci_upper": null,
+          "intercept_ci_lower": null,
+          "intercept_ci_upper": null,
+          "p_slope_lt_1": null,
+          "n_bootstrap": 0,
+          "stratified": false,
+          "warning": "minority-class share below 5% \u2014 logistic MLE is unstable / diverges; slope omitted (use mean overpricing pp instead)"
+        },
+        "mean_overpricing_pp": 7.0075,
+        "longshot": {
+          "definition": "snapshot_price <= 0.15",
+          "n_markets": 18,
+          "n_resolved_yes": 0,
+          "mean_overpricing_pp": 0.5917
+        },
+        "calibration_buckets": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.05,
+            "bin_center": 0.025,
+            "mean_predicted": 0.00592,
+            "mean_actual": 0.0,
+            "n": 18
+          },
+          {
+            "bin_lower": 0.05,
+            "bin_upper": 0.1,
+            "bin_center": 0.075,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.15,
+            "bin_center": 0.125,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.15,
+            "bin_upper": 0.2,
+            "bin_center": 0.175,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.25,
+            "bin_center": 0.225,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.25,
+            "bin_upper": 0.3,
+            "bin_center": 0.275,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.35,
+            "bin_center": 0.325,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.35,
+            "bin_upper": 0.4,
+            "bin_center": 0.375,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.45,
+            "bin_center": 0.425,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.45,
+            "bin_upper": 0.5,
+            "bin_center": 0.475,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.55,
+            "bin_center": 0.525,
+            "mean_predicted": 0.5,
+            "mean_actual": 0.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.55,
+            "bin_upper": 0.6,
+            "bin_center": 0.575,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.65,
+            "bin_center": 0.625,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.65,
+            "bin_upper": 0.7,
+            "bin_center": 0.675,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.75,
+            "bin_center": 0.725,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.75,
+            "bin_upper": 0.8,
+            "bin_center": 0.775,
+            "mean_predicted": 0.795,
+            "mean_actual": 0.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.85,
+            "bin_center": 0.825,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.85,
+            "bin_upper": 0.9,
+            "bin_center": 0.875,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 0.95,
+            "bin_center": 0.925,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          },
+          {
+            "bin_lower": 0.95,
+            "bin_upper": 1.0,
+            "bin_center": 0.975,
+            "mean_predicted": null,
+            "mean_actual": null,
+            "n": 0
+          }
+        ]
       }
     },
     "Sports": {
@@ -5562,6 +6322,196 @@
             }
           ]
         }
+      },
+      "final_price": {
+        "label": "Sports_final",
+        "n_markets": 153,
+        "n_resolved_yes": 32,
+        "base_rate": 0.20915,
+        "brier_score": 0.059136,
+        "brier_score_baseline": 0.165406,
+        "bss": 0.642478,
+        "log_odds": {
+          "slope": 1.61184,
+          "intercept": 0.02779,
+          "slope_ci_lower": 1.16847,
+          "slope_ci_upper": 2.93839,
+          "intercept_ci_lower": -0.65652,
+          "intercept_ci_upper": 0.87502,
+          "p_slope_lt_1": 0.0,
+          "n_bootstrap": 500,
+          "stratified": false,
+          "ci_wide": false
+        },
+        "mean_overpricing_pp": 1.2408,
+        "longshot": {
+          "definition": "snapshot_price <= 0.15",
+          "n_markets": 95,
+          "n_resolved_yes": 1,
+          "mean_overpricing_pp": 0.8747
+        },
+        "calibration_buckets": [
+          {
+            "bin_lower": 0.0,
+            "bin_upper": 0.05,
+            "bin_center": 0.025,
+            "mean_predicted": 0.00439,
+            "mean_actual": 0.0,
+            "n": 79
+          },
+          {
+            "bin_lower": 0.05,
+            "bin_upper": 0.1,
+            "bin_center": 0.075,
+            "mean_predicted": 0.06556,
+            "mean_actual": 0.0,
+            "n": 9
+          },
+          {
+            "bin_lower": 0.1,
+            "bin_upper": 0.15,
+            "bin_center": 0.125,
+            "mean_predicted": 0.12779,
+            "mean_actual": 0.14286,
+            "n": 7
+          },
+          {
+            "bin_lower": 0.15,
+            "bin_upper": 0.2,
+            "bin_center": 0.175,
+            "mean_predicted": 0.16817,
+            "mean_actual": 0.0,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.2,
+            "bin_upper": 0.25,
+            "bin_center": 0.225,
+            "mean_predicted": 0.23775,
+            "mean_actual": 0.25,
+            "n": 4
+          },
+          {
+            "bin_lower": 0.25,
+            "bin_upper": 0.3,
+            "bin_center": 0.275,
+            "mean_predicted": 0.26819,
+            "mean_actual": 0.25,
+            "n": 8
+          },
+          {
+            "bin_lower": 0.3,
+            "bin_upper": 0.35,
+            "bin_center": 0.325,
+            "mean_predicted": 0.3425,
+            "mean_actual": 0.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.35,
+            "bin_upper": 0.4,
+            "bin_center": 0.375,
+            "mean_predicted": 0.383,
+            "mean_actual": 0.2,
+            "n": 5
+          },
+          {
+            "bin_lower": 0.4,
+            "bin_upper": 0.45,
+            "bin_center": 0.425,
+            "mean_predicted": 0.42,
+            "mean_actual": 0.2,
+            "n": 5
+          },
+          {
+            "bin_lower": 0.45,
+            "bin_upper": 0.5,
+            "bin_center": 0.475,
+            "mean_predicted": 0.47,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.5,
+            "bin_upper": 0.55,
+            "bin_center": 0.525,
+            "mean_predicted": 0.51983,
+            "mean_actual": 0.66667,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.55,
+            "bin_upper": 0.6,
+            "bin_center": 0.575,
+            "mean_predicted": 0.579,
+            "mean_actual": 0.4,
+            "n": 5
+          },
+          {
+            "bin_lower": 0.6,
+            "bin_upper": 0.65,
+            "bin_center": 0.625,
+            "mean_predicted": 0.64,
+            "mean_actual": 1.0,
+            "n": 3
+          },
+          {
+            "bin_lower": 0.65,
+            "bin_upper": 0.7,
+            "bin_center": 0.675,
+            "mean_predicted": 0.69,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.7,
+            "bin_upper": 0.75,
+            "bin_center": 0.725,
+            "mean_predicted": 0.705,
+            "mean_actual": 1.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.75,
+            "bin_upper": 0.8,
+            "bin_center": 0.775,
+            "mean_predicted": 0.765,
+            "mean_actual": 0.5,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.8,
+            "bin_upper": 0.85,
+            "bin_center": 0.825,
+            "mean_predicted": 0.8325,
+            "mean_actual": 1.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.85,
+            "bin_upper": 0.9,
+            "bin_center": 0.875,
+            "mean_predicted": 0.88,
+            "mean_actual": 1.0,
+            "n": 1
+          },
+          {
+            "bin_lower": 0.9,
+            "bin_upper": 0.95,
+            "bin_center": 0.925,
+            "mean_predicted": 0.9225,
+            "mean_actual": 1.0,
+            "n": 2
+          },
+          {
+            "bin_lower": 0.95,
+            "bin_upper": 1.0,
+            "bin_center": 0.975,
+            "mean_predicted": 0.98911,
+            "mean_actual": 1.0,
+            "n": 9
+          }
+        ]
       }
     }
   }

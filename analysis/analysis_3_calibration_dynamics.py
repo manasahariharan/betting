@@ -274,10 +274,13 @@ def build_snapshot_table(df):
     for r in df.itertuples():
         rec = {
             "market_id": r.market_id,
+            "question": getattr(r, "question", None),
+            "slug": getattr(r, "slug", None),
             "category": r.category,
             "category_analysis": getattr(r, "category_analysis",
                                           r.category),
             "volume": r.volume,
+            "end_date": getattr(r, "end_date", None),
             "duration_days": r.duration_days,
             "n_history_obs": r.n_history_obs,
             "resolved_yes": r.resolved_yes,
@@ -432,9 +435,18 @@ def per_category_dynamics(snap_df):
                 cat_df, col, f"{cat}_pct_{int(pct*100):02d}",
                 min_n=MIN_CATEGORY_N,
             )
+        # Per-category final-price entry, computed on the same dynamics
+        # sample so it lines up with the per-snapshot trajectory and the
+        # frontend dial can include a "Final" position for every category
+        # without fetching from a different sample.
+        cat_final = snapshot_metrics(
+            cat_df, "final_yes_price", f"{cat}_final",
+            min_n=MIN_CATEGORY_N,
+        )
         out[cat] = {
             "n_markets_in_dynamics_sample": int(len(cat_df)),
             "snapshots": cat_snapshots,
+            "final_price": cat_final,
         }
         # Console: show slope trajectory (skipped → "—")
         traj = []
@@ -570,6 +582,64 @@ def main():
         "min_category_n": MIN_CATEGORY_N,
         "categories": by_cat,
     }), "dynamics_category.json")
+
+    # Per-market snapshot index. Used by the docs/index.html "Explore by
+    # category" interactive viz to overlay an individual market's price at
+    # any selected snapshot on top of the per-category calibration curve.
+    # Slim: only the columns the frontend needs, with explicit None for
+    # snapshot ticks the market doesn't have. Sorted by end_date desc so
+    # the default "latest closed" sort in the UI is essentially free.
+    market_index_records = []
+    for rec in snap_df.to_dict(orient="records"):
+        out = {
+            "market_id": rec.get("market_id"),
+            "question": rec.get("question"),
+            "slug": rec.get("slug"),
+            "category": rec.get("category_analysis") or rec.get("category"),
+            "end_date": rec.get("end_date"),
+            "volume": (round(float(rec["volume"]), 2)
+                       if rec.get("volume") is not None
+                       and not pd.isna(rec["volume"]) else None),
+            "duration_days": (round(float(rec["duration_days"]), 2)
+                              if rec.get("duration_days") is not None
+                              and not pd.isna(rec["duration_days"]) else None),
+            "resolved_yes": (int(rec["resolved_yes"])
+                             if rec.get("resolved_yes") is not None
+                             and not pd.isna(rec["resolved_yes"]) else None),
+            "final_yes_price": (round(float(rec["final_yes_price"]), 4)
+                                if rec.get("final_yes_price") is not None
+                                and not pd.isna(rec["final_yes_price"])
+                                else None),
+        }
+        for pct in SNAPSHOT_PCTS:
+            col = f"snap_{int(pct*100):02d}"
+            v = rec.get(col)
+            out[col] = (round(float(v), 4)
+                        if v is not None and not pd.isna(v) else None)
+        market_index_records.append(out)
+
+    # Sort by end_date desc so the default "latest closed" presentation
+    # is already in order. None end_dates sink to the bottom.
+    market_index_records.sort(
+        key=lambda r: (r.get("end_date") or ""), reverse=True
+    )
+
+    save({
+        "generated": datetime.now(timezone.utc).isoformat(),
+        "description": (
+            "Per-market snapshot prices for the dynamics-eligible "
+            f"sample (n = {len(market_index_records)}). Each market has "
+            "the most-recent CLOB tick at or before each relative-time "
+            f"snapshot in {SNAPSHOT_PCTS}, plus its final price and "
+            "resolution. Used by the interactive 'Explore by category' "
+            "chart in docs/index.html to overlay a market's price "
+            "trajectory on the per-category calibration curve as the "
+            "user moves the snapshot dial. Sorted by end_date desc."
+        ),
+        "snapshot_pcts": SNAPSHOT_PCTS,
+        "n_markets": len(market_index_records),
+        "markets": market_index_records,
+    }, "markets_snapshot_index.json")
 
     t1 = datetime.now(timezone.utc)
     print(f"\n  Completed: {t1.isoformat()} "
