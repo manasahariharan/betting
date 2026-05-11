@@ -361,10 +361,69 @@ blockquote {
 /* Section 2B selector */
 #section-2b-selector .dynamics-chart-container { margin-top: 16px; }
 #selector-cat-desc {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   min-height: 1.4em;
   color: var(--text-muted);
+  margin: 6px 0 0;
+}
+#selector-snap-help {
+  font-size: 0.78rem;
+  color: var(--text-dim);
   margin: 4px 0 0;
+  min-height: 1.2em;
+}
+
+/* Interactive step (6th scrolly step) */
+.step-content--interactive .snapshot-dial-row {
+  margin: 14px 0 8px;
+  flex-wrap: wrap;
+}
+.step-content--interactive .category-toggles {
+  margin: 8px 0 4px;
+}
+.step-content--interactive .snap-btn { padding: 5px 10px; font-size: 0.75rem; }
+.step-content--interactive .cat-btn { padding: 5px 12px; font-size: 0.75rem; }
+
+/* Journey chart */
+.journey-chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.journey-chart-container .chart-title { font-size: 0.95rem; }
+.journey-chart-container .chart-subtitle { font-size: 0.8rem; min-height: 1.2em; }
+#journey-chart svg .journey-axis text {
+  fill: var(--text-dim);
+  font-size: 11px;
+}
+#journey-chart svg .journey-grid line {
+  stroke: var(--border);
+  stroke-opacity: 0.4;
+}
+#journey-chart svg .journey-resolved {
+  stroke: var(--text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 6,4;
+}
+#journey-chart svg .journey-line {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+#journey-chart svg .journey-fill {
+  fill-opacity: 0.18;
+}
+#journey-chart svg .journey-dot {
+  stroke: var(--bg-card);
+  stroke-width: 2;
+  cursor: pointer;
+}
+#journey-chart svg .journey-dot-label {
+  fill: var(--text-dim);
+  font-size: 10px;
+  font-family: var(--font-mono);
 }
 
 /* Snapshot dial */
@@ -780,55 +839,58 @@ footer a:hover { text-decoration: underline; }
         </p>
       </div>
     </div>
+    <div class="scrolly__step" data-step="cal-interactive">
+      <div class="step-content step-content--interactive">
+        <h3>Now you try</h3>
+        <p style="font-size:0.92rem;">
+          The same chart, but you control what it shows. Pick a snapshot of market lifetime
+          and a category, and the curve and BSS update for that slice.
+        </p>
+        <div class="snapshot-dial-row">
+          <span class="snapshot-dial-label">Snapshot:</span>
+          <div class="snapshot-dial" id="selector-snap-dial"></div>
+        </div>
+        <div class="category-toggles" id="selector-cat-toggles"></div>
+        <p id="selector-cat-desc"></p>
+        <p id="selector-snap-help"></p>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Section 2B: Category + market selector with snapshot dial -->
+<!-- Section 2B: Per-market journey -->
 <section id="section-2b-selector">
   <div class="wide-container">
-    <div class="section-label">Explore by category</div>
-    <h2>Calibration over time, by category</h2>
+    <div class="section-label">Explore by market</div>
+    <h2>The journey of a single market</h2>
     <p style="max-width:760px;">
-      <span class="highlight-green">Crypto</span> markets are the best-calibrated overall&mdash;clear
-      binary outcomes, quantitative thresholds.
-      <span class="highlight-orange">Sports</span> lag behind&mdash;information arrives at game time,
-      not gradually.
-      <span class="highlight-purple">Politics</span> sits in between.
+      Pick any of the markets in the dynamics sample to see how its YES price moved across the
+      snapshots of its lifetime&mdash;from 10% elapsed to close. The dashed line is the resolved
+      outcome (0% if the market resolved NO, 100% if YES). The shaded area is the gap between the
+      crowd's price and what actually happened.
     </p>
-    <p style="max-width:760px;">
-      Drag the <strong>snapshot dial</strong> to see what each category's calibration curve looked
-      like at that fraction of a market's lifetime. Then pick a market to overlay its price at the
-      same snapshot&mdash;move the dial and watch the dot trace the market's path toward resolution.
-    </p>
-
-    <div class="snapshot-dial-row">
-      <span class="snapshot-dial-label">Snapshot:</span>
-      <div class="snapshot-dial" id="selector-snap-dial"></div>
-      <span class="snapshot-dial-help" id="selector-snap-help"></span>
-    </div>
-
-    <div class="category-toggles" id="selector-cat-toggles"></div>
-    <p id="selector-cat-desc"></p>
-
-    <div class="dynamics-chart-container">
-      <div id="selector-chart"></div>
-    </div>
 
     <div class="selector-picker-wrap">
       <p class="selector-picker-prompt" id="selector-picker-prompt">
-        Pick a market to track its price across snapshots:
+        Search and sort markets:
       </p>
       <div class="selector-picker-controls">
         <input type="search" id="selector-market-search" placeholder="Search markets&hellip;" autocomplete="off">
         <select id="selector-market-sort" aria-label="Sort markets">
           <option value="end_date_desc">Latest closed</option>
           <option value="end_date_asc">Earliest closed</option>
-          <option value="miss_now">Biggest miss at this snapshot</option>
+          <option value="miss_now">Biggest miss at the active snapshot</option>
           <option value="volume_desc">Highest volume</option>
         </select>
         <span class="selector-picker-count" id="selector-picker-count"></span>
       </div>
       <div id="selector-market-list"></div>
+    </div>
+
+    <div class="dynamics-chart-container journey-chart-container">
+      <div class="chart-title" id="journey-title">Pick a market above to see its price journey</div>
+      <div class="chart-subtitle" id="journey-subtitle">No market selected.</div>
+      <div id="journey-chart"></div>
     </div>
   </div>
 </section>
@@ -965,7 +1027,7 @@ footer a:hover { text-decoration: underline; }
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6"></script>
-<script src="https://unpkg.com/scrollama@3.2.0/scrollama.min.js"></script>
+<script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
 
 <script>
 (async function() {
@@ -1448,7 +1510,39 @@ footer a:hover { text-decoration: underline; }
                        bss:   dynamicsData.final_price_sanity_check.bss },
     };
 
-    const cfg = stepConfig[step];
+    // Interactive step: read live dial+category state and update
+    // chart title/subtitle/data via the same animation pipeline.
+    let cfg;
+    if (step === "cal-interactive") {
+      const snap = (typeof getSnapRecord === "function")
+        ? getSnapRecord(selectorActiveCat, selectorActiveSnap)
+        : null;
+      const snapLabel = SNAP_LABELS[selectorActiveSnap] || selectorActiveSnap;
+      const color = COLORS[selectorActiveCat] || COLORS["All"];
+      const titleStr = (selectorActiveCat === "All")
+        ? `Calibration at ${snapLabel} of lifetime`
+        : `${selectorActiveCat} at ${snapLabel} of lifetime`;
+      let subStr;
+      if (!snap || snap.skipped) {
+        subStr = (snap && snap.skipped)
+          ? snap.skipped
+          : "No data for this slice.";
+      } else {
+        const bssStr = (typeof snap.bss === "number")
+          ? `BSS ${(snap.bss * 100).toFixed(0)}%`
+          : "BSS \u2014";
+        subStr = `${snap.n_markets} markets \u00b7 ${bssStr}`;
+      }
+      titleEl.textContent = titleStr;
+      subEl.textContent = subStr;
+      cfg = {
+        data: (snap && !snap.skipped && snap.calibration_buckets) || [],
+        color,
+        bss: (snap && typeof snap.bss === "number") ? snap.bss : null,
+      };
+    } else {
+      cfg = stepConfig[step];
+    }
     if (!cfg) return;
 
     const points = bucketsToPoints(cfg.data);
@@ -1505,8 +1599,9 @@ footer a:hover { text-decoration: underline; }
       svg.select(".cal-good-fill").transition().duration(300).attr("opacity", 0);
     }
 
-    // BSS badge
-    svg.select(".cal-bss-value").text(cfg.bss.toFixed(2)).attr("fill", cfg.color);
+    // BSS badge — tolerant of null (e.g. interactive slice with all-NO outcomes)
+    const bssText = (typeof cfg.bss === "number") ? cfg.bss.toFixed(2) : "\u2014";
+    svg.select(".cal-bss-value").text(bssText).attr("fill", cfg.color);
     svg.select(".cal-bss-badge rect").attr("stroke", cfg.color);
   }
 
@@ -1756,117 +1851,15 @@ footer a:hover { text-decoration: underline; }
     descEl.textContent = `${prefix} · ${bss} on ${n} markets.`;
   }
 
-  function renderSelectorChart() {
-    const el = document.getElementById("selector-chart");
-    if (!el) return;
-    el.innerHTML = "";
-    const w = el.clientWidth || 880;
-    const h = 380;
-
-    const snap = getSnapRecord(selectorActiveCat, selectorActiveSnap);
-    const color = COLORS[selectorActiveCat] || COLORS["All"];
-
-    const marks = [
-      Plot.line([[0, 0], [1, 1]], {
-        stroke: "var(--diagonal)", strokeWidth: 1, strokeDasharray: "6,4",
-      }),
-    ];
-
-    let points = [];
-    if (snap && !snap.skipped && snap.calibration_buckets) {
-      points = bucketsToPoints(snap.calibration_buckets, 3);
-      const sorted = [...points].sort((a, b) => a.predicted - b.predicted);
-      const maxN = d3.max(points, d => d.n) || 1;
-      if (sorted.length > 1) {
-        marks.push(Plot.line(sorted, {
-          x: "predicted", y: "actual",
-          stroke: color, strokeWidth: 2.5, strokeOpacity: 0.55,
-          curve: "catmull-rom",
-        }));
-      }
-      marks.push(Plot.dot(points, {
-        x: "predicted", y: "actual",
-        r: d => 3 + 5 * Math.sqrt(d.n / maxN),
-        fill: color, fillOpacity: 0.7,
-        stroke: color, strokeWidth: 1,
-        tip: true,
-        title: d => `Predicted: ${(d.predicted * 100).toFixed(1)}%\nActual: ${(d.actual * 100).toFixed(1)}%\nn = ${d.n}`,
-      }));
-    }
-
-    // Selected-market overlay: dot at the snap-relative price vs the
-    // resolved outcome. If the market has no tick at this snapshot
-    // (snap_NN is null), fall back to its nearest earlier snapshot so
-    // the dot doesn't disappear; flag this in the tooltip.
-    if (selectorActiveMarket) {
-      const m = selectorActiveMarket;
-      let snapPrice = getMarketSnapPrice(m, selectorActiveSnap);
-      let snapForDot = selectorActiveSnap;
-      if (snapPrice === null) {
-        // Walk earlier snapshots for a fallback price
-        const earlier = SNAP_KEYS.slice(0, SNAP_KEYS.indexOf(selectorActiveSnap));
-        for (let i = earlier.length - 1; i >= 0; i--) {
-          const v = getMarketSnapPrice(m, earlier[i]);
-          if (v !== null) { snapPrice = v; snapForDot = earlier[i]; break; }
-        }
-      }
-      if (snapPrice !== null) {
-        const dotColor = m.resolved_yes === 1 ? "var(--green)" : "var(--red)";
-        const fellback = snapForDot !== selectorActiveSnap;
-        marks.push(
-          Plot.dot([m], {
-            x: snapPrice,
-            y: m.resolved_yes,
-            r: 9,
-            fill: dotColor,
-            fillOpacity: fellback ? 0.55 : 0.95,
-            stroke: "var(--bg-card)", strokeWidth: 2,
-            tip: true,
-            title: () => {
-              const pricePct = (snapPrice * 100).toFixed(1) + "%";
-              const at = SNAP_LABELS[snapForDot];
-              const note = fellback
-                ? ` (no tick at ${SNAP_LABELS[selectorActiveSnap]}; showing ${at})`
-                : ` (at ${at})`;
-              return `${m.question}\nPrice: ${pricePct}${note}\nResolved: ${m.resolved_yes ? "YES" : "NO"}`;
-            },
-          }),
-          Plot.text([m], {
-            x: snapPrice,
-            y: m.resolved_yes,
-            text: () => m.question.length > 38 ? m.question.slice(0, 36) + "\u2026" : m.question,
-            dy: m.resolved_yes === 1 ? -16 : 16,
-            fill: "var(--text)", fontSize: 11,
-            textAnchor: snapPrice > 0.7 ? "end" : "start",
-          }),
-        );
-      }
-    }
-
-    const plot = Plot.plot({
-      width: w, height: h,
-      style: { background: "transparent", color: "var(--text-muted)", fontSize: "12px" },
-      x: {
-        label: "Predicted probability",
-        domain: [0, 1],
-        ticks: [0, 0.25, 0.5, 0.75, 1],
-        tickFormat: ".0%",
-      },
-      y: {
-        label: "Observed outcome rate",
-        domain: [0, 1],
-        ticks: [0, 0.25, 0.5, 0.75, 1],
-        tickFormat: ".0%",
-      },
-      marks,
-    });
-    el.appendChild(plot);
-
-    if (points.length === 0) {
-      const note = document.createElement("div");
-      note.style.cssText = "padding:8px 4px; color:var(--text-dim); font-size:0.8rem; font-style:italic;";
-      note.textContent = `No calibration buckets to draw for ${selectorActiveCat} at ${SNAP_LABELS[selectorActiveSnap]} (sample below threshold or all values null).`;
-      el.appendChild(note);
+  // The interactive calibration chart is now the same sticky D3 chart
+  // that the scrolly walks through. Drive it by calling updateCalibration
+  // with the special step "cal-interactive", which reads the live
+  // (snap, cat) state. We only push to the chart when the scrolly is
+  // actually parked on the interactive step — otherwise scroll-driven
+  // step-enter events would be fighting our control updates.
+  function pushInteractiveToCalibrationChart() {
+    if (currentCalStep === "cal-interactive") {
+      updateCalibration("cal-interactive");
     }
   }
 
@@ -1992,7 +1985,7 @@ footer a:hover { text-decoration: underline; }
         } else {
           selectorActiveMarket = m;
         }
-        renderSelectorChart();
+        renderJourneyChart();
         renderSelectorMarketList();
       });
       frag.appendChild(row);
@@ -2023,12 +2016,184 @@ footer a:hover { text-decoration: underline; }
   // Top-level orchestrator: re-render every dependent piece. Called on
   // any state change (snapshot dial, category toggle, market click,
   // search input, sort change).
+  //
+  // The calibration chart is only re-pushed if the scrolly is currently
+  // parked on the interactive step. Picker list and journey chart re-render
+  // unconditionally because they live below the scrolly.
   function renderSelector() {
     renderSnapshotDial();
     renderCategoryToggles();
     renderSelectorDescription();
-    renderSelectorChart();
+    pushInteractiveToCalibrationChart();
     renderSelectorMarketList();
+    renderJourneyChart();
+  }
+
+  // ── Journey chart (per-market price trajectory across snapshots) ──
+  //
+  // Shows the selected market's YES price at each of the 7 snapshot
+  // points (10/25/50/75/90/95/Final) as a connected line, with markers
+  // at each snapshot, a dashed horizontal reference at the resolved
+  // outcome (0 if NO, 1 if YES), and a light fill between the line and
+  // the reference (the gap = miscalibration at each snapshot). Snapshots
+  // with no CLOB tick are gapped so the line breaks rather than draws
+  // a dishonest interpolation.
+  const JOURNEY_SNAP_X = [
+    { key: "0.10", x: 0.10, label: "10%" },
+    { key: "0.25", x: 0.25, label: "25%" },
+    { key: "0.50", x: 0.50, label: "50%" },
+    { key: "0.75", x: 0.75, label: "75%" },
+    { key: "0.90", x: 0.90, label: "90%" },
+    { key: "0.95", x: 0.95, label: "95%" },
+    { key: "final", x: 1.00, label: "Final" },
+  ];
+
+  function renderJourneyChart() {
+    const container = document.getElementById("journey-chart");
+    const titleEl = document.getElementById("journey-title");
+    const subEl = document.getElementById("journey-subtitle");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!selectorActiveMarket) {
+      if (titleEl) titleEl.textContent = "Pick a market above to see its price journey";
+      if (subEl) subEl.textContent = "No market selected.";
+      return;
+    }
+
+    const m = selectorActiveMarket;
+    if (titleEl) titleEl.textContent = m.question || "(no question)";
+    const isYes = m.resolved_yes === 1;
+    const closeStr = formatEndDate(m.end_date);
+    const volStr = (m.volume != null) ? ` · vol $${shortNum(m.volume)}` : "";
+    const catStr = m.category ? `${m.category} · ` : "";
+    if (subEl) subEl.textContent =
+      `${catStr}closed ${closeStr}${volStr} · resolved ${isYes ? "YES" : "NO"}`;
+
+    const w = container.clientWidth || 700;
+    const h = 320;
+    const margin = { top: 24, right: 28, bottom: 48, left: 56 };
+    const iw = w - margin.left - margin.right;
+    const ih = h - margin.top - margin.bottom;
+
+    const xScale = d3.scaleLinear().domain([0, 1]).range([0, iw]);
+    const yScale = d3.scaleLinear().domain([0, 1]).range([ih, 0]);
+
+    const svg = d3.select(container).append("svg")
+      .attr("width", w).attr("height", h)
+      .attr("viewBox", `0 0 ${w} ${h}`);
+    const g = svg.append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Grid
+    const yTicks = [0, 0.25, 0.5, 0.75, 1];
+    g.append("g").attr("class", "journey-grid")
+      .selectAll("line").data(yTicks).enter().append("line")
+      .attr("x1", 0).attr("x2", iw)
+      .attr("y1", d => yScale(d)).attr("y2", d => yScale(d));
+
+    // Axes labels
+    g.append("g").attr("class", "journey-axis")
+      .selectAll("text.y").data(yTicks).enter().append("text").attr("class", "y")
+      .attr("x", -8).attr("y", d => yScale(d) + 4).attr("text-anchor", "end")
+      .text(d => Math.round(d * 100) + "%");
+    g.append("g").attr("class", "journey-axis")
+      .selectAll("text.x").data(JOURNEY_SNAP_X).enter().append("text").attr("class", "x")
+      .attr("x", d => xScale(d.x)).attr("y", ih + 18).attr("text-anchor", "middle")
+      .text(d => d.label);
+    g.append("text").attr("class", "journey-axis")
+      .attr("x", iw / 2).attr("y", ih + 38).attr("text-anchor", "middle")
+      .attr("fill", "var(--text-muted)").attr("font-size", "11px")
+      .text("Fraction of market lifetime elapsed");
+    g.append("text").attr("class", "journey-axis")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -ih / 2).attr("y", -40).attr("text-anchor", "middle")
+      .attr("fill", "var(--text-muted)").attr("font-size", "11px")
+      .text("YES price");
+
+    // Axis lines
+    g.append("line").attr("x1", 0).attr("x2", iw).attr("y1", ih).attr("y2", ih)
+      .attr("stroke", "var(--border)");
+    g.append("line").attr("x1", 0).attr("x2", 0).attr("y1", 0).attr("y2", ih)
+      .attr("stroke", "var(--border)");
+
+    // Resolved-outcome reference line
+    const resolvedY = m.resolved_yes === 1 ? 1 : 0;
+    const resolvedColor = isYes ? "var(--green)" : "var(--red)";
+    g.append("line").attr("class", "journey-resolved")
+      .attr("x1", 0).attr("x2", iw)
+      .attr("y1", yScale(resolvedY)).attr("y2", yScale(resolvedY))
+      .attr("stroke", resolvedColor);
+    g.append("text")
+      .attr("x", iw - 4).attr("y", yScale(resolvedY) + (isYes ? -8 : 16))
+      .attr("text-anchor", "end")
+      .attr("fill", resolvedColor).attr("font-size", "11px").attr("font-weight", 600)
+      .text(isYes ? "Resolved YES (100%)" : "Resolved NO (0%)");
+
+    // Build the trajectory data. Snapshots without a tick are kept as
+    // null entries so the line generator inserts gaps via .defined().
+    const traj = JOURNEY_SNAP_X.map(s => ({
+      key: s.key,
+      label: s.label,
+      x: s.x,
+      price: getMarketSnapPrice(m, s.key),
+    }));
+
+    const lineGen = d3.line()
+      .defined(d => d.price !== null)
+      .x(d => xScale(d.x))
+      .y(d => yScale(d.price))
+      .curve(d3.curveMonotoneX);
+
+    // Area between line and resolved-outcome reference (the "gap")
+    const areaGen = d3.area()
+      .defined(d => d.price !== null)
+      .x(d => xScale(d.x))
+      .y0(yScale(resolvedY))
+      .y1(d => yScale(d.price))
+      .curve(d3.curveMonotoneX);
+
+    const lineColor = COLORS[m.category] || "var(--accent)";
+
+    g.append("path").attr("class", "journey-fill")
+      .attr("d", areaGen(traj))
+      .attr("fill", lineColor);
+
+    g.append("path").attr("class", "journey-line")
+      .attr("d", lineGen(traj))
+      .attr("stroke", lineColor);
+
+    // Per-snapshot dots
+    g.selectAll("circle.journey-dot")
+      .data(traj.filter(d => d.price !== null))
+      .enter().append("circle")
+      .attr("class", "journey-dot")
+      .attr("cx", d => xScale(d.x))
+      .attr("cy", d => yScale(d.price))
+      .attr("r", 5)
+      .attr("fill", lineColor)
+      .append("title")
+      .text(d => `${d.label}: ${(d.price * 100).toFixed(1)}%\nGap to outcome: ${(Math.abs(d.price - resolvedY) * 100).toFixed(1)}pp`);
+
+    // Per-dot price label above each dot
+    g.selectAll("text.journey-dot-label")
+      .data(traj.filter(d => d.price !== null))
+      .enter().append("text")
+      .attr("class", "journey-dot-label")
+      .attr("x", d => xScale(d.x))
+      .attr("y", d => yScale(d.price) - 9)
+      .attr("text-anchor", "middle")
+      .text(d => Math.round(d.price * 100) + "%");
+
+    // Note if any snapshots are missing
+    const missing = traj.filter(d => d.price === null).map(d => d.label);
+    if (missing.length) {
+      g.append("text")
+        .attr("x", iw / 2).attr("y", ih + 38).attr("text-anchor", "middle")
+        .attr("fill", "var(--text-dim)").attr("font-size", "10px")
+        .attr("dy", "1.2em")
+        .text(`No CLOB tick at: ${missing.join(", ")}`);
+    }
   }
 
   function wireSelectorPickerControls() {
@@ -2053,7 +2218,6 @@ footer a:hover { text-decoration: underline; }
     }
   }
 
-  function renderCategorySelector() { renderSelector(); }  // legacy alias for resize handler
 
   // ── BSS Dynamics line chart ──
   const dynamicsCategories = Object.keys(dynamicsCategoryData.categories);
@@ -2381,7 +2545,7 @@ footer a:hover { text-decoration: underline; }
       updateTimeline(document.querySelector("#scrolly-timeline .scrolly__step.is-active")?.dataset.step || "tl-open");
       initCalibrationChart();
       updateCalibration(currentCalStep);
-      renderSelectorChart();
+      renderJourneyChart();
       dynamicsAnimated = false;
       renderDynamicsChart();
     }, 200);
